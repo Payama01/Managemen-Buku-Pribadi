@@ -1,8 +1,11 @@
 const Joi = require('joi');
 const express = require('express');
 const app = express();
+const path = require('path'); // Import path module
 
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 const books = [
   {id: 1, name: 'Ibu Kita Kartini', halaman: 100, penulis: 'Yusuf' },
@@ -13,6 +16,12 @@ const books = [
 app.get('/',(req,res) => {
   res.send('Hello World!!!');
 });
+
+// Buat ambil semua buku
+app.get('/api/books', (req, res) => {
+  res.send(books);
+});
+
 
 app.get('/api/books', async (req,res) => {
   try{
@@ -35,6 +44,7 @@ app.get('/api/books/:id', async (req,res) => {
   
 });
 
+//Buat Nambah buku
 app.post('/api/books', async (req,res) => {
   try{
     const { error } = verificationBook(req.body);
@@ -65,6 +75,7 @@ app.put('/api/books/:id', async (req,res) => {
   
 });
 
+//Buat apus buku
 app.delete('/api/books/:id', async (req,res) => {
   try{
     const book = await deleteBook(req.params.id);
@@ -109,6 +120,7 @@ function savingBook(book) { //untuk app.post async
   });
 }
 
+//Buat edit buku
 function updateBook(id,reqBody) {
   return new Promise((resolve,reject) => {
     setTimeout(() => {
