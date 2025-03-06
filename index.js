@@ -22,7 +22,7 @@ app.get('/api/books', (req, res) => {
   res.send(books);
 });
 
-
+// Buat ambil semua buku tapi async
 app.get('/api/books', async (req,res) => {
   try{
     const data = await takeData();
@@ -32,6 +32,7 @@ app.get('/api/books', async (req,res) => {
   }
 });
 
+// Buat ambil 1 spesific buku dengan cara mencari id
 app.get('/api/books/:id', async (req,res) => {
   try {
     const book = await takeSingleData(req.params.id);
@@ -64,6 +65,7 @@ app.post('/api/books', async (req,res) => {
   }
 });
 
+// Buat Update buku
 app.put('/api/books/:id', async (req,res) => {
   try{
     const book = await updateBook(req.params.id,req.body);
@@ -75,7 +77,7 @@ app.put('/api/books/:id', async (req,res) => {
   
 });
 
-//Buat apus buku
+//Buat Hapus buku
 app.delete('/api/books/:id', async (req,res) => {
   try{
     const book = await deleteBook(req.params.id);
@@ -115,7 +117,7 @@ function savingBook(book) { //untuk app.post async
   return new Promise((resolve) => {
     setTimeout(() => {
       books.push(book);
-      resolve(books);
+      resolve(book);
     }, 2000);
   });
 }
