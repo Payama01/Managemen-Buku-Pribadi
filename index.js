@@ -100,7 +100,7 @@ function takeData() { // untuk app.get async
       } else {
         reject("Data gagal diambil");
       }
-    },2000);
+    },1000);
   });
 }
 
@@ -113,7 +113,7 @@ function takeSingleData(id) {
       } else {
         reject("Data gagal diambil");
       }
-    },2000);
+    },1000);
   })
 }
 
@@ -122,7 +122,7 @@ function savingBook(book) { //untuk app.post async
     setTimeout(() => {
       books.push(book);
       resolve(book);
-    }, 2000);
+    }, 1000);
   });
 }
 
@@ -155,7 +155,7 @@ function deleteBook(id) {
       books.splice(index,1);
 
       resolve(book);
-    },3000);
+    },1000);
   })
 }
 
