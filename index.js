@@ -8,9 +8,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const books = [
-  {id: 1, name: 'Ibu Kita Kartini', halaman: 100, penulis: 'Yusuf' },
-  {id: 2, name: 'Seporsi Mie Ayam Terakhir', halaman: 230, penulis: 'Sartika'},
-  {id: 3, name: 'Perjuangan Negara', halaman: 68, penulis: 'Handoyo'},
+  {id: 1, name: 'To Kill a Mockingbird', halaman: 281, penulis: 'Harper Lee' },
+  {id: 2, name: 'Seporsi Mie Ayam Sebelum Mati', halaman: 216, penulis: 'Brian Khrisna'},
+  {id: 3, name: 'The Great Gatsby', halaman: 180, penulis: 'F. Scott Fitzgerald'},
 ];
 
 app.get('/',(req,res) => {
