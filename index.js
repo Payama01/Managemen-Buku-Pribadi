@@ -66,24 +66,28 @@ app.post('/api/books', async (req,res) => {
 });
 
 // Buat Update buku
-app.put('/api/books/:id', async (req,res) => {
-  try{
-    const book = await updateBook(req.params.id,req.body);
+app.put('/api/books/:id', async (req, res) => {
+    const bookId = parseInt(req.params.id);
+    const { name, halaman, penulis } = req.body;
+
+    const book = books.find(b => b.id === bookId);
+    if (!book) return res.status(404).send('Buku yang diupdate tidak ada!');
+
+    book.name = name;
+    book.halaman = halaman;
+    book.penulis = penulis;
+
     res.send(book);
-  }
-  catch(error) {
-    res.status(404).send('Buku yang diupdate tidak ada!');
-  }
-  
 });
+
 
 //Buat Hapus buku
 app.delete('/api/books/:id', async (req,res) => {
-  try{
-    const book = await deleteBook(req.params.id);
-    res.send(book);
-  }
-  catch(error) {
+  try {
+    const bookId = req.params.id;
+    books = books.filter(b => b.id !== parseInt(bookId));
+    res.status(204).send();
+  } catch(error) {
     res.status(404).send('Buku yang ingin dihapus tidak ada!');
   }
 })
