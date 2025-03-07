@@ -83,11 +83,11 @@ app.put('/api/books/:id', async (req, res) => {
 
 //Buat Hapus buku
 app.delete('/api/books/:id', async (req,res) => {
-  try {
-    const bookId = req.params.id;
-    books = books.filter(b => b.id !== parseInt(bookId));
-    res.status(204).send();
-  } catch(error) {
+  try{
+    const book = await deleteBook(req.params.id);
+    res.send(book);
+  }
+  catch(error) {
     res.status(404).send('Buku yang ingin dihapus tidak ada!');
   }
 })
@@ -155,7 +155,7 @@ function deleteBook(id) {
       books.splice(index,1);
 
       resolve(book);
-    },3000);
+    },1000);
   })
 }
 
