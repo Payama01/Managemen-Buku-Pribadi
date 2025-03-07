@@ -1,46 +1,63 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const bookList = document.getElementById('book-list');
-    const bookForm = document.getElementById('book-form');
+const bookForm = document.getElementById('bookForm');
+const booksTable = document.getElementById('booksTable').getElementsByTagName('tbody')[0];
 
-    // Ambil semua buku
-    async function fetchBooks() {
-        const response = await fetch('/api/books');
-        const books = await response.json();
-        const bookList = document.getElementById('book-list');
+let books = []; // Array untuk menyimpan data buku
 
-        books.forEach(book => {
-            const li = document.createElement('li');
-            li.textContent = `${book.name} - ${book.halaman} halaman - Penulis: ${book.penulis}`;
-            bookList.appendChild(li);
-        });
-    }
+// Fungsi untuk menampilkan buku di tabel
+function displayBooks() {
+    // Kosongkan tabel sebelum menampilkan data
+    booksTable.innerHTML = '';
 
-    // Tambah buku
-    bookForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = document.getElementById('name').value;
-        const halaman = document.getElementById('halaman').value;
-        const penulis = document.getElementById('penulis').value;
-
-        const response = await fetch('/api/books', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name, halaman, penulis }),
-        });
-
-        if (response.ok) {
-            const newBook = await response.json();
-            const li = document.createElement('li');
-            li.textContent = `${newBook.name} - ${newBook.halaman} halaman - Penulis: ${newBook.penulis}`;
-            bookList.appendChild(li);
-            bookForm.reset();
-        } else {
-            alert('Gagal menambah buku');
-        }
+    books.forEach((book, index) => {
+        const row = booksTable.insertRow();
+        row.innerHTML = `
+            <td>${book.id}</td>
+            <td>${book.name}</td>
+            <td>${book.halaman}</td>
+            <td>${book.penulis}</td>
+            <td>
+                <button onclick="editBook(${index})">Edit</button>
+                <button onclick="deleteBook(${index})">Hapus</button>
+            </td>
+        `;
     });
+}
 
-    fetchBooks();
-    
+// Fungsi untuk menambah buku
+bookForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const newBook = {
+        id: books.length + 1,
+        name: document.getElementById('name').value,
+        halaman: document.getElementById('halaman').value,
+        penulis: document.getElementById('penulis').value,
+    };
+
+    books.push(newBook);
+    displayBooks();
+
+    // Reset form
+    bookForm.reset();
 });
+
+// Fungsi untuk mengedit buku
+function editBook(index) {
+    const book = books[index];
+    document.getElementById('name').value = book.name;
+    document.getElementById('halaman').value = book.halaman;
+    document.getElementById('penulis').value = book.penulis;
+
+    // Hapus buku dari array
+    books.splice(index, 1);
+    displayBooks();
+}
+
+// Fungsi untuk menghapus buku
+function deleteBook(index) {
+    books.splice(index, 1);
+    displayBooks();
+}
+
+// Tampilkan buku awal (jika ada)
+displayBooks();

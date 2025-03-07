@@ -3,20 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
     <title>Manajemen Buku</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Jika ada CSS -->
 </head>
 <body>
-    <h1>Daftar Buku</h1>
-    <ul id="book-list"></ul>
-
-    <h2>Tambah Buku</h2>
-    <form id="book-form">
+    <h1>Manajemen Buku</h1>
+    
+    <form id="bookForm">
         <input type="text" id="name" placeholder="Nama Buku" required>
         <input type="number" id="halaman" placeholder="Jumlah Halaman" required>
         <input type="text" id="penulis" placeholder="Nama Penulis" required>
         <button type="submit">Tambah Buku</button>
     </form>
+
+    <table id="booksTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nama Buku</th>
+                <th>Jumlah Halaman</th>
+                <th>Penulis</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data buku akan ditambahkan di sini -->
+        </tbody>
+    </table>
 
     <script src="script.js"></script>
 </body>
