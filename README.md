@@ -1,6 +1,6 @@
-> 535240190 - Muhammad Yusuf Erki
-> 535240192 - Rakhafian Anargia Firdaus
-> 535240121 - Yusuf Abdurrahman Aslam
+<p>535240190 - Muhammad Yusuf Erki</p>
+<p>535240192 - Rakhafian Anargya Firdaus</p>
+<p>535240121 - Yusuf Abdurrahman Aslam</p>
 
 <h1>
     MANAJEMEN BUKU
@@ -119,5 +119,5 @@ Hasil
  
 
 ```
-© ERKI, RAKHA, YUSUF 2025 (UNTAR)
+© ERKI, RAKHA, YUSUF 2025 (UNTAR) all right reserved
 ```
