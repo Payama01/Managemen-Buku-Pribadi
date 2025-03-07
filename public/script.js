@@ -1,63 +1,89 @@
-const bookForm = document.getElementById('bookForm');
-const booksTable = document.getElementById('booksTable').getElementsByTagName('tbody')[0];
+const books = [
+    { id: 1, name: 'Ibu Kita Kartini', halaman: 100, penulis: 'Yusuf' },
+    { id: 2, name: 'Seporsi Mie Ayam Terakhir', halaman: 230, penulis: 'Sartika' },
+    { id: 3, name: 'Perjuangan Negara', halaman: 68, penulis: 'Handoyo' },
+];
+let currentId = 1;
 
-let books = []; // Array untuk menyimpan data buku
+document.getElementById('bookForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    addBook();
+});
 
-// Fungsi untuk menampilkan buku di tabel
+function addBook() {
+    const name = document.getElementById('name').value;
+    const halaman = document.getElementById('halaman').value;
+    const penulis = document.getElementById('penulis').value;
+
+    const book = {
+        id: currentId++,
+        name: name,
+        halaman: halaman,
+        penulis: penulis
+    };
+
+    books.push(book);
+    displayBooks();
+    document.getElementById('bookForm').reset();
+}
+
 function displayBooks() {
-    // Kosongkan tabel sebelum menampilkan data
-    booksTable.innerHTML = '';
+    const tableBody = document.querySelector('#booksTable tbody');
+    tableBody.innerHTML = '';
 
-    books.forEach((book, index) => {
-        const row = booksTable.insertRow();
+    books.forEach(book => {
+        const row = document.createElement('tr');
         row.innerHTML = `
             <td>${book.id}</td>
             <td>${book.name}</td>
             <td>${book.halaman}</td>
             <td>${book.penulis}</td>
             <td>
-                <button onclick="editBook(${index})">Edit</button>
-                <button onclick="deleteBook(${index})">Hapus</button>
+                <button onclick="editBook(${book.id})">Edit</button>
+                <button onclick="deleteBook(${book.id})">Hapus</button>
             </td>
         `;
+        tableBody.appendChild(row);
     });
 }
 
-// Fungsi untuk menambah buku
-bookForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const newBook = {
-        id: books.length + 1,
-        name: document.getElementById('name').value,
-        halaman: document.getElementById('halaman').value,
-        penulis: document.getElementById('penulis').value,
-    };
-
-    books.push(newBook);
-    displayBooks();
-
-    // Reset form
-    bookForm.reset();
-});
-
-// Fungsi untuk mengedit buku
-function editBook(index) {
-    const book = books[index];
-    document.getElementById('name').value = book.name;
-    document.getElementById('halaman').value = book.halaman;
-    document.getElementById('penulis').value = book.penulis;
-
-    // Hapus buku dari array
-    books.splice(index, 1);
+function deleteBook(id) {
+    books = books.filter(book => book.id !== id);
     displayBooks();
 }
 
-// Fungsi untuk menghapus buku
-function deleteBook(index) {
-    books.splice(index, 1);
-    displayBooks();
+function editBook(id) {
+    const book = books.find(book => book.id === id);
+    if (book) {
+        document.getElementById('name').value = book.name;
+        document.getElementById('halaman').value = book.halaman;
+        document.getElementById('penulis').value = book.penulis;
+        deleteBook(id);
+    }
 }
 
-// Tampilkan buku awal (jika ada)
-displayBooks();
+function searchBooks() {
+    const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+    const filteredBooks = books.filter(book => 
+        book.name.toLowerCase().includes(searchTerm) || 
+        book.penulis.toLowerCase().includes(searchTerm)
+    );
+
+    const tableBody = document.querySelector('#booksTable tbody');
+    tableBody.innerHTML = '';
+
+    filteredBooks.forEach(book => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${book.id}</td>
+            <td>${book.name}</td>
+            <td>${book.halaman}</td>
+            <td>${book.penulis}</td>
+            <td>
+                <button onclick="editBook(${book.id})">Edit</button>
+                <button onclick="deleteBook(${book.id})">Hapus</button>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
