@@ -22,6 +22,7 @@ function displayBooks(books) {
             <td>${book.name}</td>
             <td>${book.halaman}</td>
             <td>${book.penulis}</td>
+            <td>Test</td>
             <td>
                 <button onclick="editBook('${book._id}')">Edit</button>
                 <button onclick="deleteBook('${book._id}')">Hapus</button>
