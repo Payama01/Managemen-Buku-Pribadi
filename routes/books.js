@@ -34,7 +34,7 @@ router.get('/:id', async (req,res) => {
 //Buat Nambah buku
 router.post('/', async (req,res) => {
   try{
-    const { error } = verificationBook(req.body);
+    const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
     let savedBooks = new Book({ name: req.body.name });
@@ -47,7 +47,7 @@ router.post('/', async (req,res) => {
 
 // Buat Update buku
 router.put('/:id', async (req, res) => {
-    const { error } = validateGenre(req.body);
+    const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
     const book = await Book.findByIdAndUpdate(req.params.id, {
