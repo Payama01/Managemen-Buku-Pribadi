@@ -23,7 +23,7 @@ function validateBook(book) {
       penulis: Joi.string().required()
     });
   
-    return Joi.validate(book, schema);
+    return schema.validate(book);
   }
 
 module.exports.Book = Book;

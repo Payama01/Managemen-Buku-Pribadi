@@ -18,15 +18,16 @@ function displayBooks(books) {
     books.forEach(book => {
         const row = booksTable.insertRow();
         row.innerHTML = `
-            <td>${book.id}</td>
+            <td>${book._id}</td>
             <td>${book.name}</td>
             <td>${book.halaman}</td>
             <td>${book.penulis}</td>
             <td>
-                <button onclick="editBook(${book.id})">Edit</button>
-                <button onclick="deleteBook(${book.id})">Hapus</button>
+                <button onclick="editBook('${book._id}')">Edit</button>
+                <button onclick="deleteBook('${book._id}')">Hapus</button>
             </td>
         `;
+
     });
 }
 
@@ -35,9 +36,11 @@ bookForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const bookData = {
         name: document.getElementById('name').value,
-        halaman: document.getElementById('halaman').value,
+        halaman: parseInt(document.getElementById('halaman').value),
         penulis: document.getElementById('penulis').value,
     };
+
+    console.log("Mengirim data:", bookData);
 
     if (editingBookId) {
         // Update buku
@@ -66,11 +69,19 @@ bookForm.addEventListener('submit', async (e) => {
 });
 
 // Fungsi untuk mengedit buku
-function editBook(id) {
-    const row = booksTable.rows[id - 1]; // Mengambil baris berdasarkan ID
-    document.getElementById('name').value = row.cells[1].innerText;
-    document.getElementById('halaman').value = row.cells[2].innerText;
-    document.getElementById('penulis').value = row.cells[3].innerText;
+async function editBook(id) {
+    //const row = booksTable.rows[id - 1]; // Mengambil baris berdasarkan ID
+    const response = await fetch(`/api/books/${id}`);
+    if(!response.ok){
+        console.error("Gagal mengambil data buku");
+        return;
+    }
+
+    const book = await response.json();
+
+    document.getElementById('name').value = book.name;
+    document.getElementById('halaman').value = book.halaman;
+    document.getElementById('penulis').value = book.penulis;
 
     editingBookId = id; // Set ID buku yang sedang diedit
     submitButton.textContent = 'Ubah'; // Ubah tombol menjadi "Ubah"
@@ -78,9 +89,15 @@ function editBook(id) {
 
 // Fungsi untuk menghapus buku
 async function deleteBook(id) {
-    await fetch(`/api/books/${id}`, {
+    const response = await fetch(`/api/books/${id}`, {
         method: 'DELETE',
     });
+
+    if (!response.ok) {
+        console.error("Gagal menghapus buku");
+        return;
+    }
+
     fetchBooks(); // Ambil data buku terbaru
 }
 

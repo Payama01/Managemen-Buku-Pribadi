@@ -33,13 +33,21 @@ router.get('/:id', async (req,res) => {
 
 //Buat Nambah buku
 router.post('/', async (req,res) => {
+  console.log("Data yang diterima dari frontend:", req.body);
   try{
     const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error){
+      console.error("Validasi gagal:", error.details[0].message); // Debugging
+      return res.status(400).send(error.details[0].message);
+    }
 
-    let savedBooks = new Book({ name: req.body.name });
+    let book = new Book({ 
+      name: req.body.name,
+      halaman: req.body.halaman, 
+      penulis: req.body.penulis
+    });
     book = await book.save();
-    res.send(savedBooks);
+    res.send(book);
   } catch (error){
     res.status(500).send(error.message);
   }
