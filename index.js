@@ -5,6 +5,8 @@ const express = require('express');
 const app = express();
 const path = require('path'); // Import path module
 
+app.set('view engine', 'ejs');
+
 mongoose.connect('mongodb://localhost/ManagemenBuku')
   .then(() => console.log('Connected to MongoDB...'))
   .catch(err => console.error('Could not connect to MongoDB...'));
