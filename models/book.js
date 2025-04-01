@@ -26,5 +26,5 @@ function validateBook(book) {
     return schema.validate(book);
   }
 
-module.exports.Book = Book;
+module.exports = Book;
 module.exports.validate = validateBook;

@@ -1,5 +1,7 @@
-const {Book, validate} = require('../models/book');
+const Book = require('../models/book');
+const {validate} = require('../models/book');
 const mongoose = require('mongoose');
+const ejs = require('ejs');
 const express = require('express');
 const router = express.Router();
 
@@ -11,8 +13,8 @@ const router = express.Router();
 // Buat ambil semua buku tapi async
 router.get('/', async (req,res) => {
   try{
-    const data = await Book.find().sort('name');
-    res.send(data);
+    const books = await Book.find().sort('name');
+    res.json(books);
   } catch(error){
       res.status(404).send('Buku yang dicari tidak ada!');
   }
@@ -49,6 +51,7 @@ router.post('/', async (req,res) => {
     book = await book.save();
     res.send(book);
   } catch (error){
+    console.error("Error saat menyimpan buku:", error);
     res.status(500).send(error.message);
   }
 });
