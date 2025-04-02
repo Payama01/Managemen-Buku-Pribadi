@@ -13,6 +13,10 @@ const Book = mongoose.model('Book', new mongoose.Schema({
     penulis: {
         type: String,
         required: true
+    },
+    lokasi: {
+        type: String,
+        required: true
     }
 }));
 
@@ -20,7 +24,8 @@ function validateBook(book) {
     const schema = Joi.object({
       name: Joi.string().required(),
       halaman: Joi.number().integer().required(),
-      penulis: Joi.string().required()
+      penulis: Joi.string().required(),
+      lokasi: Joi.string().required()
     });
   
     return schema.validate(book);

@@ -22,6 +22,7 @@ function displayBooks(books) {
             <td>${book.name}</td>
             <td>${book.halaman}</td>
             <td>${book.penulis}</td>
+            <td>${book.lokasi}</td>
             <td>Test</td>
             <td>
                 <button onclick="editBook('${book._id}')">Edit</button>
@@ -39,6 +40,7 @@ bookForm.addEventListener('submit', async (e) => {
         name: document.getElementById('name').value,
         halaman: parseInt(document.getElementById('halaman').value),
         penulis: document.getElementById('penulis').value,
+        lokasi: document.getElementById('lokasi').value,
     };
 
     console.log("Mengirim data:", bookData);
@@ -83,6 +85,7 @@ async function editBook(id) {
     document.getElementById('name').value = book.name;
     document.getElementById('halaman').value = book.halaman;
     document.getElementById('penulis').value = book.penulis;
+    document.getElementById('lokasi').value = book.lokasi;
 
     editingBookId = id; // Set ID buku yang sedang diedit
     submitButton.textContent = 'Ubah'; // Ubah tombol menjadi "Ubah"

@@ -46,7 +46,8 @@ router.post('/', async (req,res) => {
     let book = new Book({ 
       name: req.body.name,
       halaman: req.body.halaman, 
-      penulis: req.body.penulis
+      penulis: req.body.penulis,
+      lokasi: req.body.lokasi
     });
     book = await book.save();
     res.send(book);
@@ -64,7 +65,8 @@ router.put('/:id', async (req, res) => {
     const book = await Book.findByIdAndUpdate(req.params.id, {
         name: req.body.name,
         halaman: req.body.halaman,
-        penulis: req.body.penulis }, {
+        penulis: req.body.penulis,
+        lokasi: req.body.lokasi }, {
         new: true
     });
 
@@ -82,72 +84,5 @@ router.delete('/:id', async (req,res) => {
 
     res.send(book);
   });
-
-function takeData() { // untuk router.get async
-  return new Promise((resolve,reject) => {
-    setTimeout(()=> {
-      if (books != null){
-        resolve(books);
-      } else {
-        reject("Data gagal diambil");
-      }
-    },1000);
-  });
-}
-
-function takeSingleData(id) {
-  return new Promise((resolve,reject) => {
-    setTimeout(() => {
-      const book = books.find(b => b.id === parseInt(id));
-      if (book != null || undefined) {
-        resolve(book);
-      } else {
-        reject("Data gagal diambil");
-      }
-    },1000);
-  })
-}
-
-function savingBook(book) { //untuk router.post async
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      books.push(book);
-      resolve(book);
-    }, 1000);
-  });
-}
-
-//Buat edit buku
-function updateBook(id,reqBody) {
-  return new Promise((resolve,reject) => {
-    setTimeout(() => {
-      const book = books.find(b => b.id === parseInt(id));
-      if (!book) return reject("Buku yang dicari tidak ada!");
-
-      const { error } = verificationBook(reqBody);
-      if (error) reject(res.status(400).send(error.details[0].message));
-
-      book.name = reqBody.name;
-      book.halaman = reqBody.halaman;
-      book.penulis = reqBody.penulis;
-      resolve(book);
-      
-    })
-  })
-}
-
-function deleteBook(id) {
-  return new Promise((resolve,reject) => {
-    setTimeout(() => {
-      const book = books.find(b => b.id === parseInt(id));
-      if (!book) return reject("Buku yang dicari tidak ada!");
-
-      const index = books.indexOf(book);
-      books.splice(index,1);
-
-      resolve(book);
-    },1000);
-  })
-}
 
 module.exports = router;
