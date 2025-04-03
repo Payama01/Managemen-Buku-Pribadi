@@ -9,11 +9,12 @@
 <body>
     <h1>Manajemen Buku</h1>
     
-    <form id="bookForm">
+    <form id="bookForm" enctype="multipart/form-data">
         <input type="text" id="name" placeholder="Nama Buku" required>
         <input type="number" id="halaman" placeholder="Jumlah Halaman" required>
         <input type="text" id="penulis" placeholder="Nama Penulis" required>
         <input type="text" id="lokasi" placeholder="Lokasi Buku" required>
+        <input type="file" id="ebook" name="ebook" placeholder="EBook (jika ada)" accept=".pdf, .epub, .mobi">
     <input type="text" id="searchInput" placeholder="Cari buku atau penulis...">
     <button type="submit" id="submitButton">Tambah Buku</button>
 
@@ -42,6 +43,12 @@
                     <td><%= book.halaman %></td>
                     <td><%= book.penulis %></td>
                     <td><%= book.lokasi %></td>
+                    <td>
+                        <% if (book.filepath) { %>
+                            <a href="<%= book.filepath.replace(/\\/g, '/') %>" target="_blank" rel="noopener noreferrer">Baca PDF</a>
+                          Tidak ada
+                        <% } %>
+                      </td>
                     <td>
                         <button onclick="deleteBook('<%= book._id %>')">Hapus</button>
                     </td>

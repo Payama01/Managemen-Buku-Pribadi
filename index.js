@@ -3,21 +3,23 @@ const books = require('./routes/books');
 const Book = require('./models/book');
 const Joi = require('joi');
 const express = require('express');
+const multer = require('multer');
 const ejs = require('ejs');
 const app = express();
 const path = require('path'); // Import path module
 
 app.set('view engine', 'ejs');
-//app.set('views', path.join(__dirname, 'views'));
 
 mongoose.connect('mongodb://localhost/ManagemenBuku')
   .then(() => console.log('Connected to MongoDB...'))
   .catch(err => console.error('Could not connect to MongoDB...'));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/api/books', books);
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/eBook', express.static(path.join(__dirname, 'eBook')));
 
 app.get('/', async (req,res) => {
   try{

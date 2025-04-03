@@ -23,7 +23,13 @@ function displayBooks(books) {
             <td>${book.halaman}</td>
             <td>${book.penulis}</td>
             <td>${book.lokasi}</td>
-            <td>Test</td>
+            <td>
+                ${
+                book.filepath
+                    ? `<a href="${book.filepath.replace(/\\/g, '/')}" target="_blank" rel="noopener noreferrer">Baca PDF</a>`
+                    : 'Tidak ada'
+                }
+            </td>
             <td>
                 <button onclick="editBook('${book._id}')">Edit</button>
                 <button onclick="deleteBook('${book._id}')">Hapus</button>
@@ -36,36 +42,46 @@ function displayBooks(books) {
 // Fungsi untuk menambah buku
 bookForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const bookData = {
-        name: document.getElementById('name').value,
-        halaman: parseInt(document.getElementById('halaman').value),
-        penulis: document.getElementById('penulis').value,
-        lokasi: document.getElementById('lokasi').value,
-    };
 
-    console.log("Mengirim data:", bookData);
+    const ebookinput = document.getElementById('ebook');
+    const formData = new FormData();
 
-    if (editingBookId) {
+    // Tambahkan data buku ke FormData
+    formData.append('name', document.getElementById('name').value);
+    formData.append('halaman', document.getElementById('halaman').value);
+    formData.append('penulis', document.getElementById('penulis').value);
+    formData.append('lokasi', document.getElementById('lokasi').value);
+
+    if (ebookinput.files.length > 0) {
+        formData.append('ebook', ebookinput.files[0]);
+      }
+    
+      if (editingBookId) {
         // Update buku
-        await fetch(`/api/books/${editingBookId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(bookData),
+        const response = await fetch(`/api/books/${editingBookId}`, {
+          method: 'PUT',
+          body: formData,
         });
+    
+        if (!response.ok) {
+          console.error("Gagal memperbarui buku");
+          return;
+        }
+    
         editingBookId = null; // Reset ID setelah edit
         submitButton.textContent = 'Tambah Buku'; // Kembali ke tombol tambah
-    } else {
-        // Create buku
-        await fetch('/api/books', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(bookData),
+      } else {
+        // Tambah buku baru
+        const response = await fetch('/api/books', {
+          method: 'POST',
+          body: formData,
         });
-    }
+    
+        if (!response.ok) {
+          console.error("Gagal menambahkan buku");
+          return;
+        }
+      }
 
     bookForm.reset(); // Reset form
     fetchBooks(); // Ambil data buku terbaru
@@ -86,6 +102,7 @@ async function editBook(id) {
     document.getElementById('halaman').value = book.halaman;
     document.getElementById('penulis').value = book.penulis;
     document.getElementById('lokasi').value = book.lokasi;
+    //document.getElementById('ebook').value = book.lokasi;
 
     editingBookId = id; // Set ID buku yang sedang diedit
     submitButton.textContent = 'Ubah'; // Ubah tombol menjadi "Ubah"

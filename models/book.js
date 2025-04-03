@@ -17,7 +17,10 @@ const Book = mongoose.model('Book', new mongoose.Schema({
     lokasi: {
         type: String,
         required: true
-    }
+    },
+    filepath: {
+        type: String,
+    },
 }));
 
 function validateBook(book) {
@@ -25,7 +28,8 @@ function validateBook(book) {
       name: Joi.string().required(),
       halaman: Joi.number().integer().required(),
       penulis: Joi.string().required(),
-      lokasi: Joi.string().required()
+      lokasi: Joi.string().required(),
+      filepath: Joi.string().optional(),
     });
   
     return schema.validate(book);
