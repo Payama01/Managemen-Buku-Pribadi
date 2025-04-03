@@ -123,4 +123,4 @@ searchInput.addEventListener('input', () => {
 });
 
 // Ambil buku saat halaman dimuat
-//fetchBooks();
+fetchBooks();
