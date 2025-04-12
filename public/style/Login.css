@@ -39,8 +39,8 @@ h1{
     align-items: center;
 }
 
-.username{
-    padding-bottom: 10px;
+input{
+    margin-bottom: 10px;
 }
 
 .book_kecil{
@@ -52,7 +52,7 @@ h1{
     padding-bottom: 20px;
 }
 
-input{
+.field{
     width: 500px;
     height: 50px;
 
@@ -90,6 +90,9 @@ a{
     background-color: rgba(170, 180, 242, 1);
 }
 
+.btn_up{
+    border: 1px greenyellow solid;
+}
 .btn_up:hover{
     background: linear-gradient(to right, #55EE40, #FFF757);
 }
@@ -99,9 +102,9 @@ fieldset{
     border-radius: 10px;
     backdrop-filter: blur(10px);
 
-    box-shadow: 2px 2px rgb(134, 130, 130);
+    box-shadow: 4px 4px rgb(134, 130, 130);
 
-    height: 170px;
+    height: 160px;
     width: 400px;
 
     padding: 20px;

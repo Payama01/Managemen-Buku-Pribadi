@@ -13,7 +13,7 @@
 <body>
     <div class="container">
         <div class="top">
-            <h1 class="russo-one-regular">Selamat Datang</h1>
+            <h1 class="russo-one-regular">Selamat Datang, User</h1>
         </div>
 
         <div class="middle">
@@ -24,12 +24,14 @@
             <form class="Login" action="/auth/Login" method="post">
                 <fieldset>
                     <div class="username">
-                        <input type="text" name="username" placeholder="Username" required autofocus>
+                        <input class="field" type="text" name="username" placeholder="Username" required autofocus>
                     </div>
 
                     <div class="password">
-                        <input type="text" name="password" placeholder="Password" required>
+                        <input class="field" type="password" id="password" name="password" placeholder="Password" required>
                     </div>
+
+                    <input type="checkbox" onclick="showHide()"> Tampilkan Password
 
                     <div class="btn_wrap">
                         <button class="btn_login russo-one-regular" type="submit" name="submit">Login</button>
@@ -42,5 +44,16 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function showHide() {
+            var inputan = document.getElementById("password");
+            if (inputan.type === "password") {
+                inputan.type = "text";
+            } else {
+                inputan.type = "password";
+            }
+        } 
+    </script>
 </body>
 </html>
