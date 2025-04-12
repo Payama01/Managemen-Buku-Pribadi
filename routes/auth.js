@@ -26,4 +26,19 @@ router.get('/logout', (req, res) => {
   res.redirect('/auth/login');
 });
 
+router.get('/signup', (req, res) => {
+    res.render('sign'); //sign.ejs
+});
+
+// POST sign up form
+router.post('/signup', (req, res) => {
+    const { username, password } = req.body;
+
+    // Di sini kamu bisa simpan ke database, untuk sekarang contoh sederhana
+    console.log("User terdaftar:", username, password);
+
+    // Setelah daftar, langsung login atau arahkan ke login page
+    res.redirect('/auth/login');
+});
+
 module.exports = router;

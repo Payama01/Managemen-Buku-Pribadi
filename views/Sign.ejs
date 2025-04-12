@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/style/Login.css">
+    <link rel="stylesheet" href="/style/sign.css">
+    <link rel="stylesheet" href="../public/style/sign.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
-    <title>Login Page</title>
+    <title>Sign Up Page</title>
 </head>
 <body>
     <div class="container">
@@ -17,26 +18,31 @@
         </div>
 
         <div class="middle">
-            <img class="book_kecil" src="/image/book_kecil.svg" alt="book_kecil">
+            <img class="book_kecil" src="../public/image/book_kecil.svg" alt="book_kecil">
         </div>
 
         <div class="bottom">
             <form class="Login" action="/auth/Login" method="post">
                 <fieldset>
                     <div class="username">
+                        <input type="email" name="username" placeholder="name@email" required autofocus>
+                    </div>
+
+                    <div class="username">
                         <input type="text" name="username" placeholder="Username" required autofocus>
                     </div>
 
                     <div class="password">
-                        <input type="text" name="password" placeholder="Password" required>
+                        <input class="field-password" type="text" name="password" placeholder="Password" required>
+                        <input type="text" name="password" placeholder="Password again" required>
                     </div>
 
                     <div class="btn_wrap">
-                        <button class="btn_login russo-one-regular" type="submit" name="submit">Login</button>
-                        <% if (locals.error) { %>
+                        <button class="btn_up russo-one-regular" type="submit" name="submit">Sign Up</button>
+                        <!-- <% if (locals.error) { %>
                             <span class="text-danger pl-2"><%= error %></span>
-                        <% } %> 
-                        <button class="btn_up russo-one-regular"><a href="/auth/signup">Sign Up</a></button>
+                        <% } %>  -->
+                        <button class="btn_login russo-one-regular"><a href="/auth/login">Login</a></button>
                     </div>
                 </fieldset>
             </form>

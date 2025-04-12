@@ -25,7 +25,7 @@ const indexRoutes = require('./routes/index');
 app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
 
-
+//
 app.set('view engine', 'ejs');
 
 mongoose.connect('mongodb://localhost/ManagemenBuku')
@@ -52,3 +52,5 @@ app.get('/', async (req,res) => {
 
 const port = process.env.PORT || 4000;
 app.listen(port,() => console.log(`Listening on port ${port}...`));
+
+console.log('http://localhost:4000/')
