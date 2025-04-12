@@ -8,6 +8,24 @@ const ejs = require('ejs');
 const app = express();
 const path = require('path'); // Import path module
 
+const session = require("express-session")
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended:true }));
+
+// session
+app.use(session({
+  secret : 'some_secret_key',
+  resave : false,
+  saveUninitialized : true,
+}));
+
+const authRoutes = require('./routes/auth');
+const indexRoutes = require('./routes/index');
+
+app.use('/', indexRoutes);
+app.use('/auth', authRoutes);
+
+
 app.set('view engine', 'ejs');
 
 mongoose.connect('mongodb://localhost/ManagemenBuku')

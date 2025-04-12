@@ -9,7 +9,7 @@
 }
 
 body{
-    background-image: url("../image/Bg_book.jpg");
+    background-image: url("/image/Bg_book.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
