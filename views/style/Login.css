@@ -5,7 +5,7 @@
 
 .container{
     display: grid;
-    gap: 40px;
+    gap: 20px;
 }
 
 body{
@@ -55,7 +55,16 @@ input{
     width: 500px;
     height: 50px;
 
+    padding-left: 10px;
+
     font-size: large;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+
+    padding: 10px 60px;
 }
 
 .btn_login, .btn_up{
@@ -73,6 +82,26 @@ input{
 
 .btn_login, .btn_up, input{
     border-radius: 10px;
-    border-color:aliceblue;
     border-style: none;
+}
+
+.btn_login{
+    background-color: rgba(170, 180, 242, 1);
+}
+
+.btn_up:hover{
+    background: linear-gradient(to right, #55EE40, #FFF757);
+}
+
+fieldset{
+    border-style:none;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+
+    box-shadow: 2px 2px rgb(134, 130, 130);
+
+    height: 170px;
+    width: 400px;
+
+    padding: 20px;
 }
