@@ -31,7 +31,7 @@ function displayBooks(books) {
                 }
             </td>
             <td>
-                <button class="change" data-bs-toggle="modal" data-bs-target="#formulir" onclick="editBook('${book.nomorbuku}')">Edit</button>
+                <button class="change" data-bs-toggle="modal" data-bs-target="#formulir" onclick="editBook('${book._id}')">Edit</button>
                 <button class="change" onclick="deleteBook('${book._id}')">Hapus</button>
             </td>
         `;
@@ -63,7 +63,7 @@ bookForm.addEventListener('submit', async (e) => {
     if (ebookInput.files.length > 0) {
         formData.append('ebook', ebookInput.files[0]);
     }
-    
+    console.log(editingBookNo);
     try {
         if (editingBookNo) {
             // Update buku yang ada
@@ -120,10 +120,10 @@ function showNotification(message, type) {
 }
 
 // Fungsi untuk mengedit buku
-async function editBook(nomorbuku) {
+async function editBook(id) {
     try {
         // Mengambil data buku dari API
-        const response = await fetch(`/api/books/search/${nomorbuku}`);
+        const response = await fetch(`/api/books/search/${id}`);
         
         if (!response.ok) {
             throw new Error(`Gagal mengambil data buku: ${response.status}`);
@@ -141,14 +141,23 @@ async function editBook(nomorbuku) {
         // Untuk field file (ebook), biasanya tidak di-set value-nya karena security restriction
         // Tapi bisa menampilkan nama file yang ada jika diperlukan
         if (book.filepath) {
+            // Hapus elemen informasi file sebelumnya jika ada
+            const existingEbookInfo = document.getElementById('ebook-info');
+            if (existingEbookInfo) {
+                existingEbookInfo.remove();
+            }
+
+
             const ebookInfo = document.createElement('div');
+            ebookInfo.id = 'ebook-info';
             ebookInfo.textContent = `File terpasang: ${book.filepath.split('/').pop()}`;
             ebookInfo.style.marginTop = '5px';
             document.getElementById('ebook').parentNode.appendChild(ebookInfo);
         }
 
         // Set status edit
-        editingBookNo = nomorbuku;
+        console.log(`Nomor Buku: ${id}`);
+        editingBookNo = id;
         submitButton.textContent = 'Update Buku';
         
         // Scroll ke form untuk UX yang lebih baik
@@ -183,7 +192,7 @@ searchInput.addEventListener('input', () => {
         const cells = row.getElementsByTagName('td');
         const nomorbuku = cells[0].innerText.toLowerCase();
         const name = cells[1].innerText.toLowerCase();
-        const penulis = cells[2].innerText.toLowerCase();
+        const penulis = cells[3].innerText.toLowerCase();
         
         if (
             nomorbuku.includes(searchTerm) || 
