@@ -36,10 +36,10 @@ router.get('/', async (req,res) => {
 });
 
 // Buat ambil 1 spesific buku dengan mencari nomor buku
-router.get('/search/:nomorbuku', async (req, res) => {
+router.get('/search/:id', async (req, res) => {
   try {
-    const book = await Book.findOne({ nomorbuku: req.params.nomorbuku });
-    
+    const book = await Book.findById(req.params.id);
+    console.log("ID yang diterima:", req.params.id);
     if (!book) {
       return res.status(404).send('Buku dengan nomor tersebut tidak ditemukan!');
     }
@@ -114,6 +114,8 @@ router.put('/:id', upload.single('ebook'), async (req, res) => {
   try {
     console.log("Data yang diterima:", req.body);
     console.log("File yang diunggah:", req.file);
+    console.log("ID yang diterima untuk update:", req.params.id);
+    console.log("Data yang diterima untuk update:", req.body);
 
     // Validasi input
     const { error } = validate(req.body);

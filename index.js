@@ -12,6 +12,8 @@ const session = require("express-session")
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended:true }));
 
+app.use(express.urlencoded({ extended: true }));
+
 // session
 app.use(session({
   secret : 'some_secret_key',
