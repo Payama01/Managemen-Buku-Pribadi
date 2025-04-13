@@ -31,8 +31,8 @@ function displayBooks(books) {
                 }
             </td>
             <td>
-                <button onclick="editBook('${book._id}')">Edit</button>
-                <button onclick="deleteBook('${book._id}')">Hapus</button>
+                <button class="change" data-bs-toggle="modal" data-bs-target="#formulir" onclick="editBook('${book._id}')">Edit</button>
+                <button class="change" onclick="deleteBook('${book._id}')">Hapus</button>
             </td>
         `;
 
