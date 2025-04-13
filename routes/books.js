@@ -35,17 +35,19 @@ router.get('/', async (req,res) => {
   }
 });
 
-// Buat ambil 1 spesific buku dengan cara mencari id
-router.get('/:id', async (req,res) => {
+// Buat ambil 1 spesific buku dengan mencari nomor buku
+router.get('/search/:nomorbuku', async (req, res) => {
   try {
-    const book = await Book.findById(req.params.id);
+    const book = await Book.findOne({ nomorbuku: req.params.nomorbuku });
+    
+    if (!book) {
+      return res.status(404).send('Buku dengan nomor tersebut tidak ditemukan!');
+    }
+    
     res.send(book);
+  } catch(error) {
+    res.status(500).send('Terjadi kesalahan server.');
   }
-  catch(error) {
-    res.status(404).send('Buku yang dicari tidak ada!');
-  }
-  
-  
 });
 
 // Endpoint khusus untuk mengunggah file
@@ -57,62 +59,122 @@ router.post('/upload', upload.single('ebook'), (req, res) => {
 });
 
 //Buat Nambah buku
-router.post('/',upload.single('ebook'), async (req,res) => {
+router.post('/', upload.single('ebook'), async (req, res) => {
   console.log("Data yang diterima dari frontend:", req.body);
   console.log("File yang diunggah:", req.file);
-  try{
+  
+  try {
+    // Validasi request body
     const { error } = validate(req.body);
-    if (error){
-      console.error("Validasi gagal:", error.details[0].message); // Debugging
+    if (error) {
+      console.error("Validasi gagal:", error.details[0].message);
       return res.status(400).send(error.details[0].message);
     }
 
-    let book = new Book({ 
+    // Cek apakah nomor buku sudah ada
+    const existingBook = await Book.findOne({ nomorbuku: req.body.nomorbuku });
+    if (existingBook) {
+      return res.status(400).send('Nomor buku sudah digunakan');
+    }
+
+    // Buat buku baru
+    const book = new Book({ 
+      nomorbuku: req.body.nomorbuku,
       name: req.body.name,
-      halaman: parseInt(req.body.halaman), 
+      halaman: parseInt(req.body.halaman),
       penulis: req.body.penulis,
       lokasi: req.body.lokasi,
-      filepath: req.file.path ? `/eBook/${req.file.filename}` : null,
+      filepath: req.file ? `/eBook/${req.file.filename}` : null
     });
-    book = await book.save();
-    res.status(201).send({ message: "Buku berhasil disimpan!", book });
-    console.log("Path file yang disimpan:", book.filepath);
-  } catch (error){
+
+    // Simpan ke database
+    await book.save();
+    
+    res.status(201).send({ 
+      message: "Buku berhasil disimpan!", 
+      book: {
+        _id: book._id,
+        nomorbuku: book.nomorbuku,
+        name: book.name,
+        halaman: book.halaman,
+        penulis: book.penulis,
+        lokasi: book.lokasi,
+        filepath: book.filepath
+      }
+    });
+    
+  } catch (error) {
     console.error("Error saat menyimpan buku:", error);
-    res.status(500).send(error.message);
+    res.status(500).send('Terjadi kesalahan server');
   }
 });
 
 // Buat Update buku
-router.put('/:id',upload.single('ebook'), async (req, res) => {
-  try{
+router.put('/:id', upload.single('ebook'), async (req, res) => {
+  try {
     console.log("Data yang diterima:", req.body);
     console.log("File yang diunggah:", req.file);
+
+    // Validasi input
     const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
-    const updateBook = {
-        name: req.body.name,
-        halaman: parseInt(req.body.halaman),
-        penulis: req.body.penulis,
-        lokasi: req.body.lokasi,
-    };
-
-    if (req.file) {
-      updateBook.filepath = `/eBook/${req.file.filename}`;
+    if (error) {
+      return res.status(400).send(error.details[0].message);
     }
 
-    const book = await Book.findByIdAndUpdate(req.params.id, updateBook, {
-      new: true,
+    // Cek apakah nomor buku sudah digunakan oleh buku lain
+    if (req.body.nomorbuku) {
+      const existingBook = await Book.findOne({ 
+        nomorbuku: req.body.nomorbuku,
+        _id: { $ne: req.params.id } // Exclude current book from check
+      });
+      
+      if (existingBook) {
+        return res.status(400).send('Nomor buku sudah digunakan oleh buku lain');
+      }
+    }
+
+    // Data yang mau di update
+    const updateData = {
+      nomorbuku: req.body.nomorbuku,
+      name: req.body.name,
+      halaman: parseInt(req.body.halaman),
+      penulis: req.body.penulis,
+      lokasi: req.body.lokasi
+    };
+
+    // Handle file upload jika ada
+    if (req.file) {
+      updateData.filepath = `/eBook/${req.file.filename}`;
+      
+      // Hapus file lama jika ada
+      const oldBook = await Book.findById(req.params.id);
+      if (oldBook && oldBook.filepath) {
+        const oldFilePath = path.join(__dirname, '..', 'public', oldBook.filepath);
+        fs.unlink(oldFilePath, (err) => {
+          if (err) console.error('Gagal menghapus file lama:', err);
+        });
+      }
+    }
+
+    // Update buku
+    const updatedBook = await Book.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedBook) {
+      return res.status(404).send('Buku dengan ID tersebut tidak ditemukan');
+    }
+
+    res.send({
+      message: 'Buku berhasil diperbarui',
+      book: updatedBook
     });
 
-    if (!book) return res.status(404).send('The genre with the given ID was not found.');
-
-    res.send(book);
-  }
-  catch(error) {
+  } catch (error) {
     console.error("Error saat mengupdate buku:", error);
-    return res.status(500).send(error.message);
+    res.status(500).send('Terjadi kesalahan server saat mengupdate buku');
   }
 });
 
