@@ -208,3 +208,17 @@ searchInput.addEventListener('input', () => {
 
 // Ambil buku saat halaman dimuat
 fetchBooks();
+
+// Reset form setiap kali modal ditutup
+const modalElement = document.getElementById('formulir');
+modalElement.addEventListener('hidden.bs.modal', () => {
+    bookForm.reset(); // Reset semua input di form
+    editingBookNo = null; // Reset status editing
+    submitButton.textContent = 'Tambah Buku'; // Ubah tombol kembali ke "Tambah Buku"
+
+    // Hapus elemen informasi file jika ada
+    const existingEbookInfo = document.getElementById('ebook-info');
+    if (existingEbookInfo) {
+        existingEbookInfo.remove();
+    }
+});
