@@ -110,7 +110,7 @@ router.post('/', upload.single('ebook'), async (req, res) => {
 });
 
 // Buat Update buku
-router.put('/:id', upload.single('ebook'), async (req, res) => {
+router.put('/update/:nomorbuku', upload.single('ebook'), async (req, res) => {
   try {
     console.log("Data yang diterima:", req.body);
     console.log("File yang diunggah:", req.file);
@@ -125,7 +125,7 @@ router.put('/:id', upload.single('ebook'), async (req, res) => {
     if (req.body.nomorbuku) {
       const existingBook = await Book.findOne({ 
         nomorbuku: req.body.nomorbuku,
-        _id: { $ne: req.params.id } // Exclude current book from check
+        _id: { $ne: req.params.nomorbuku } // Exclude current book from check
       });
       
       if (existingBook) {
@@ -147,7 +147,7 @@ router.put('/:id', upload.single('ebook'), async (req, res) => {
       updateData.filepath = `/eBook/${req.file.filename}`;
       
       // Hapus file lama jika ada
-      const oldBook = await Book.findById(req.params.id);
+      const oldBook = await Book.findById(req.params.nomorbuku);
       if (oldBook && oldBook.filepath) {
         const oldFilePath = path.join(__dirname, '..', 'public', oldBook.filepath);
         fs.unlink(oldFilePath, (err) => {
@@ -158,7 +158,7 @@ router.put('/:id', upload.single('ebook'), async (req, res) => {
 
     // Update buku
     const updatedBook = await Book.findByIdAndUpdate(
-      req.params.id,
+      req.params.nomorbuku,
       updateData,
       { new: true, runValidators: true }
     );
@@ -183,7 +183,7 @@ router.put('/:id', upload.single('ebook'), async (req, res) => {
 router.delete('/:id', async (req,res) => {
   try {
     // Cari buku berdasarkan ID
-    const book = await Book.findById(req.params.id);
+    const book = await Book.findById(req.params.nomorbuku);
     if (!book) return res.status(404).send('Buku yang ingin dihapus tidak ada!');
 
     // Hapus file jika ada filepath
@@ -199,7 +199,7 @@ router.delete('/:id', async (req,res) => {
     }
 
     // Hapus buku dari database
-    await Book.findByIdAndDelete(req.params.id);
+    await Book.findByIdAndDelete(req.params.nomorbuku);
 
     res.send(book);
   } catch (error) {

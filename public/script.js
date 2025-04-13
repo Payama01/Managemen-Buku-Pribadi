@@ -3,7 +3,7 @@ const booksTable = document.getElementById('booksTable').getElementsByTagName('t
 const submitButton = document.getElementById('submitButton');
 const searchInput = document.getElementById('searchInput');
 
-let editingBookId = null;
+let editingBookNo = null;
 
 // Fungsi untuk mengambil semua buku
 async function fetchBooks() {
@@ -18,7 +18,7 @@ function displayBooks(books) {
     books.forEach(book => {
         const row = booksTable.insertRow();
         row.innerHTML = `
-            <td>${book._id}</td>
+            <td>${book.nomorbuku}</td>
             <td>${book.name}</td>
             <td>${book.halaman}</td>
             <td>${book.penulis}</td>
@@ -31,7 +31,7 @@ function displayBooks(books) {
                 }
             </td>
             <td>
-                <button class="change" data-bs-toggle="modal" data-bs-target="#formulir" onclick="editBook('${book._id}')">Edit</button>
+                <button class="change" data-bs-toggle="modal" data-bs-target="#formulir" onclick="editBook('${book.nomorbuku}')">Edit</button>
                 <button class="change" onclick="deleteBook('${book._id}')">Hapus</button>
             </td>
         `;
@@ -65,9 +65,9 @@ bookForm.addEventListener('submit', async (e) => {
     }
     
     try {
-        if (editingBookId) {
+        if (editingBookNo) {
             // Update buku yang ada
-            const response = await fetch(`/api/books/${editingBookId}`, {
+            const response = await fetch(`/api/books/${editingBookNo}`, {
                 method: 'PUT',
                 body: formData,
             });
@@ -94,7 +94,7 @@ bookForm.addEventListener('submit', async (e) => {
         }
 
         // Reset form dan status
-        editingBookId = null;
+        editingBookNo = null;
         submitButton.textContent = 'Tambah Buku';
         bookForm.reset();
         
@@ -120,17 +120,17 @@ function showNotification(message, type) {
 }
 
 // Fungsi untuk mengedit buku
-async function editBook(id) {
+async function editBook(nomorbuku) {
     try {
         // Mengambil data buku dari API
-        const response = await fetch(`/api/books/${id}`);
+        const response = await fetch(`/api/books/search/${nomorbuku}`);
         
         if (!response.ok) {
             throw new Error(`Gagal mengambil data buku: ${response.status}`);
         }
 
         const book = await response.json();
-
+        
         // Mengisi form dengan data buku
         document.getElementById('nomorbuku').value = book.nomorbuku;
         document.getElementById('name').value = book.name;
@@ -148,7 +148,7 @@ async function editBook(id) {
         }
 
         // Set status edit
-        editingBookId = id;
+        editingBookNo = nomorbuku;
         submitButton.textContent = 'Update Buku';
         
         // Scroll ke form untuk UX yang lebih baik
@@ -181,12 +181,12 @@ searchInput.addEventListener('input', () => {
     
     for (let row of rows) {
         const cells = row.getElementsByTagName('td');
-        const nomorBuku = cells[0].innerText.toLowerCase();
+        const nomorbuku = cells[0].innerText.toLowerCase();
         const name = cells[1].innerText.toLowerCase();
         const penulis = cells[2].innerText.toLowerCase();
         
         if (
-            nomorBuku.includes(searchTerm) || 
+            nomorbuku.includes(searchTerm) || 
             name.includes(searchTerm) || 
             penulis.includes(searchTerm)
         ) {
