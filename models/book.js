@@ -2,6 +2,11 @@ const Joi = require('joi');
 const mongoose = require('mongoose');
 
 const Book = mongoose.model('Book', new mongoose.Schema({
+    nomorbuku: {
+        type: Number,
+        required: true, 
+        unique: true
+    },
     name: {
         type: String,
         required: true
@@ -25,6 +30,7 @@ const Book = mongoose.model('Book', new mongoose.Schema({
 
 function validateBook(book) {
     const schema = Joi.object({
+      nomorbuku: Joi.number().required(),
       name: Joi.string().required(),
       halaman: Joi.number().integer().required(),
       penulis: Joi.string().required(),

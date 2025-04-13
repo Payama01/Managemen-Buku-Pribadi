@@ -26,7 +26,7 @@
             <table id="booksTable" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Nomor Buku</th>
                         <th>Nama Buku</th>
                         <th>Jumlah Halaman</th>
                         <th>Penulis</th>
@@ -39,7 +39,7 @@
                 <tbody>
                     <% books.forEach(book => { %>
                         <tr>
-                            <td><%= book._id %></td>
+                            <td><%= book.nomorbuku %></td>
                             <td><%= book.name %></td>
                             <td><%= book.halaman %></td>
                             <td><%= book.penulis %></td>
@@ -51,7 +51,7 @@
                                 <% } %>
                               </td>
                             <td>
-                                <button onclick="deleteBook('<%= book._id %>')">Hapus</button>
+                                
                             </td>
                         </tr>
                     <% }) %>
@@ -79,6 +79,7 @@
             </div>
             <div class="modal-body">
                 <form id="bookForm" enctype="multipart/form-data">
+                    <input type="text" id="nomorbuku" placeholder="Nomor Buku" required>
                     <input type="text" id="name" placeholder="Nama Buku" required>
                     <input type="number" id="halaman" placeholder="Jumlah Halaman" required>
                     <input type="text" id="penulis" placeholder="Nama Penulis" required>
