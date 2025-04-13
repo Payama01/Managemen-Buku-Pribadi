@@ -162,7 +162,6 @@ async function editBook(id) {
         
         // Scroll ke form untuk UX yang lebih baik
         document.getElementById('bookForm').scrollIntoView({ behavior: 'smooth' });
-
     } catch (error) {
         console.error('Error:', error);
         alert('Gagal memuat data buku untuk diedit. Silakan coba lagi.');

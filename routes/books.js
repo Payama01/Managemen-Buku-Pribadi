@@ -40,7 +40,6 @@ router.get('/search/:id', async (req, res) => {
   try {
     const book = await Book.findById(req.params.id);
     console.log("ID yang diterima:", req.params.id);
-
     if (!book) {
       return res.status(404).send('Buku dengan nomor tersebut tidak ditemukan!');
     }
