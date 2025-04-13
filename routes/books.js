@@ -72,7 +72,7 @@ router.post('/',upload.single('ebook'), async (req,res) => {
       halaman: parseInt(req.body.halaman), 
       penulis: req.body.penulis,
       lokasi: req.body.lokasi,
-      filepath: req.file.path ? `/eBook/${req.file.filename}` : null,
+      filepath: req.file ? `/eBook/${req.file.filename}` : null,
     });
     book = await book.save();
     res.status(201).send({ message: "Buku berhasil disimpan!", book });
