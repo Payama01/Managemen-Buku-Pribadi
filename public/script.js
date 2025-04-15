@@ -43,10 +43,18 @@ function displayBooks(books) {
 bookForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const ebookinput = document.getElementById('ebook');
+    const ebookInput = document.getElementById('ebook');
+    const nomorbukuInput = document.getElementById('nomorbuku').value;
     const formData = new FormData();
 
+    // Validasi sederhana di frontend
+    if (!nomorbukuInput) {
+        alert('Nomor buku harus diisi');
+        return;
+    }
+
     // Tambahkan data buku ke FormData
+    formData.append('nomorbuku', nomorbukuInput);
     formData.append('name', document.getElementById('name').value);
     formData.append('halaman', document.getElementById('halaman').value);
     formData.append('penulis', document.getElementById('penulis').value);
@@ -64,25 +72,26 @@ bookForm.addEventListener('submit', async (e) => {
                 body: formData,
             });
     
-        if (!response.ok) {
-          console.error("Gagal memperbarui buku");
-          return;
-        }
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Gagal memperbarui buku');
+            }
     
-        editingBookId = null; // Reset ID setelah edit
-        submitButton.textContent = 'Tambah Buku'; // Kembali ke tombol tambah
-      } else {
-        // Tambah buku baru
-        const response = await fetch('/api/books', {
-          method: 'POST',
-          body: formData,
-        });
+            showNotification('Buku berhasil diperbarui!', 'success');
+        } else {
+            // Tambah buku baru
+            const response = await fetch('/api/books', {
+                method: 'POST',
+                body: formData,
+            });
     
-        if (!response.ok) {
-          console.error("Gagal menambahkan buku");
-          return;
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Gagal menambahkan buku');
+            }
+            
+            showNotification('Buku berhasil ditambahkan!', 'success');
         }
-      }
 
         // Reset form dan status
         editingBookNo = null;
@@ -97,6 +106,18 @@ bookForm.addEventListener('submit', async (e) => {
         showNotification(error.message, 'error');
     }
 });
+
+// Fungsi untuk menampilkan notifikasi (opsional)
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
 
 // Fungsi untuk mengedit buku
 async function editBook(id) {
@@ -165,6 +186,7 @@ async function deleteBook(id) {
 searchInput.addEventListener('input', () => {
     const searchTerm = searchInput.value.toLowerCase();
     const rows = booksTable.getElementsByTagName('tr');
+    
     for (let row of rows) {
         const cells = row.getElementsByTagName('td');
         const nomorbuku = cells[0].innerText.toLowerCase();
@@ -178,7 +200,7 @@ searchInput.addEventListener('input', () => {
         ) {
             row.style.display = '';
         } else {
-            row.style.display = 'none'; // Sembunyikan baris
+            row.style.display = 'none';
         }
     }
 });
