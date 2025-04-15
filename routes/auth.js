@@ -4,6 +4,22 @@ const router = express.Router();
 const User = require('../models/user'); // pastikan path-nya sesuai struktur kamu
 const { validate } = require('../models/user');
 
+// GET logout
+router.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/auth/login');
+});
+
+// GET signup page
+router.get('/sign', (req, res) => {
+  res.render('sign'); // sign.ejs
+});
+
+// GET User page
+router.get('/user', (req, res) => {
+  res.render('user/page'); // user/page.ejs
+});
+
 // GET login page
 router.get('/login', (req, res) => {
   if (req.session.user) {
@@ -35,17 +51,6 @@ router.post('/login', async (req, res) => {
     console.error(err);
     res.render('login', { error: 'Terjadi kesalahan saat login' });
   }
-});
-
-// GET logout
-router.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/auth/login');
-});
-
-// GET signup page
-router.get('/sign', (req, res) => {
-  res.render('sign'); // sign.ejs
 });
 
 router.post('/signup', async (req, res) => {

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style/Page.css">
+    <link rel="stylesheet" href="../../public/style/page.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <title>Sign Up Page</title>
+</head>
+<body>
+    <div class="container">
+        <div class="top">
+            <h1 class="russo-one-regular">Selamat Datang, <!--- ini kasi nama usernya---></h1>
+        </div>
+
+        <div class="middle">
+            <img class="book_kecil" src="/image/book_kecil.svg" alt="book_kecil">
+        </div>
+
+        <div class="bottom">
+            <form class="Login" action="/auth/signup" method="post">
+                <label for="" class="cage russo-one-regular">Ada yang ingin diganti?</label>
+                <fieldset>
+                    <div class="username">
+                        <input class="field" type="text" name="email" placeholder="name@email" required autofocus><!--kasi nama email-->>
+                    </div>
+
+                    <div class="username">
+                        <input class="field" type="text" name="username" placeholder="Username" required autofocus><!--kasi nama pass-->>
+                    </div>
+
+                    <div class="password">
+                        <input class="field-password field" type="password" name="password" placeholder="Password" required><!--kasi nama user-->>
+                    </div>
+
+                    <div class="btn_wrap">
+                        <button class="btn_up russo-one-regular" type="submit" name="submit">Chage</button>
+                        <button class="btn_login russo-one-regular"><a href="/auth/login">Main Page</a></button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -3,7 +3,7 @@ const booksTable = document.getElementById('booksTable').getElementsByTagName('t
 const submitButton = document.getElementById('submitButton');
 const searchInput = document.getElementById('searchInput');
 
-let editingBookId = null;
+let editingBookNo = null;
 
 // Fungsi untuk mengambil semua buku
 async function fetchBooks() {
@@ -18,7 +18,7 @@ function displayBooks(books) {
     books.forEach(book => {
         const row = booksTable.insertRow();
         row.innerHTML = `
-            <td>${book._id}</td>
+            <td>${book.nomorbuku}</td>
             <td>${book.name}</td>
             <td>${book.halaman}</td>
             <td>${book.penulis}</td>
@@ -52,16 +52,17 @@ bookForm.addEventListener('submit', async (e) => {
     formData.append('penulis', document.getElementById('penulis').value);
     formData.append('lokasi', document.getElementById('lokasi').value);
 
-    if (ebookinput.files.length > 0) {
-        formData.append('ebook', ebookinput.files[0]);
-      }
-    
-      if (editingBookId) {
-        // Update buku
-        const response = await fetch(`/api/books/${editingBookId}`, {
-          method: 'PUT',
-          body: formData,
-        });
+    if (ebookInput.files.length > 0) {
+        formData.append('ebook', ebookInput.files[0]);
+    }
+    console.log(editingBookNo);
+    try {
+        if (editingBookNo) {
+            // Update buku yang ada
+            const response = await fetch(`/api/books/${editingBookNo}`, {
+                method: 'PUT',
+                body: formData,
+            });
     
         if (!response.ok) {
           console.error("Gagal memperbarui buku");
@@ -83,29 +84,67 @@ bookForm.addEventListener('submit', async (e) => {
         }
       }
 
-    bookForm.reset(); // Reset form
-    fetchBooks(); // Ambil data buku terbaru
+        // Reset form dan status
+        editingBookNo = null;
+        submitButton.textContent = 'Tambah Buku';
+        bookForm.reset();
+        
+        // Refresh daftar buku
+        await fetchBooks();
+        
+    } catch (error) {
+        console.error("Error:", error);
+        showNotification(error.message, 'error');
+    }
 });
 
 // Fungsi untuk mengedit buku
 async function editBook(id) {
-    //const row = booksTable.rows[id - 1]; // Mengambil baris berdasarkan ID
-    const response = await fetch(`/api/books/${id}`);
-    if(!response.ok){
-        console.error("Gagal mengambil data buku");
-        return;
+    try {
+        // Mengambil data buku dari API
+        const response = await fetch(`/api/books/search/${id}`);
+        
+        if (!response.ok) {
+            throw new Error(`Gagal mengambil data buku: ${response.status}`);
+        }
+
+        const book = await response.json();
+        
+        // Mengisi form dengan data buku
+        document.getElementById('nomorbuku').value = book.nomorbuku;
+        document.getElementById('name').value = book.name;
+        document.getElementById('halaman').value = book.halaman;
+        document.getElementById('penulis').value = book.penulis;
+        document.getElementById('lokasi').value = book.lokasi;
+        
+        // Untuk field file (ebook), biasanya tidak di-set value-nya karena security restriction
+        // Tapi bisa menampilkan nama file yang ada jika diperlukan
+        if (book.filepath) {
+            // Hapus elemen informasi file sebelumnya jika ada
+            const existingEbookInfo = document.getElementById('ebook-info');
+            if (existingEbookInfo) {
+                existingEbookInfo.remove();
+            }
+
+
+            const ebookInfo = document.createElement('div');
+            ebookInfo.id = 'ebook-info';
+            ebookInfo.textContent = `File terpasang: ${book.filepath.split('/').pop()}`;
+            ebookInfo.style.marginTop = '5px';
+            document.getElementById('ebook').parentNode.appendChild(ebookInfo);
+        }
+
+        // Set status edit
+        console.log(`Nomor Buku: ${id}`);
+        editingBookNo = id;
+        submitButton.textContent = 'Update Buku';
+        
+        // Scroll ke form untuk UX yang lebih baik
+        document.getElementById('bookForm').scrollIntoView({ behavior: 'smooth' });
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Gagal memuat data buku untuk diedit. Silakan coba lagi.');
     }
-
-    const book = await response.json();
-
-    document.getElementById('name').value = book.name;
-    document.getElementById('halaman').value = book.halaman;
-    document.getElementById('penulis').value = book.penulis;
-    document.getElementById('lokasi').value = book.lokasi;
-    //document.getElementById('ebook').value = book.lokasi;
-
-    editingBookId = id; // Set ID buku yang sedang diedit
-    submitButton.textContent = 'Ubah'; // Ubah tombol menjadi "Ubah"
 }
 
 // Fungsi untuk menghapus buku
@@ -128,11 +167,16 @@ searchInput.addEventListener('input', () => {
     const rows = booksTable.getElementsByTagName('tr');
     for (let row of rows) {
         const cells = row.getElementsByTagName('td');
-        const bookName = cells[1].innerText.toLowerCase();
-        const authorName = cells[3].innerText.toLowerCase();
-
-        if (bookName.includes(searchTerm) || authorName.includes(searchTerm)) {
-            row.style.display = ''; // Tampilkan baris
+        const nomorbuku = cells[0].innerText.toLowerCase();
+        const name = cells[1].innerText.toLowerCase();
+        const penulis = cells[3].innerText.toLowerCase();
+        
+        if (
+            nomorbuku.includes(searchTerm) || 
+            name.includes(searchTerm) || 
+            penulis.includes(searchTerm)
+        ) {
+            row.style.display = '';
         } else {
             row.style.display = 'none'; // Sembunyikan baris
         }
@@ -141,3 +185,17 @@ searchInput.addEventListener('input', () => {
 
 // Ambil buku saat halaman dimuat
 fetchBooks();
+
+// Reset form setiap kali modal ditutup
+const modalElement = document.getElementById('formulir');
+modalElement.addEventListener('hidden.bs.modal', () => {
+    bookForm.reset(); // Reset semua input di form
+    editingBookNo = null; // Reset status editing
+    submitButton.textContent = 'Tambah Buku'; // Ubah tombol kembali ke "Tambah Buku"
+
+    // Hapus elemen informasi file jika ada
+    const existingEbookInfo = document.getElementById('ebook-info');
+    if (existingEbookInfo) {
+        existingEbookInfo.remove();
+    }
+});
