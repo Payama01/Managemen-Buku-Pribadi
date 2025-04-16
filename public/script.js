@@ -58,10 +58,14 @@ bookForm.addEventListener('submit', async (e) => {
     formData.append('name', document.getElementById('name').value);
     formData.append('halaman', document.getElementById('halaman').value);
     formData.append('penulis', document.getElementById('penulis').value);
+    formData.append('lokasi', document.getElementById('subject').value);
     formData.append('lokasi', document.getElementById('lokasi').value);
 
     if (ebookInput.files.length > 0) {
         formData.append('ebook', ebookInput.files[0]);
+    }
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
     }
     console.log(editingBookNo);
     try {
@@ -181,6 +185,37 @@ async function deleteBook(id) {
 
     fetchBooks(); // Ambil data buku terbaru
 }
+
+// Fungsi untuk mengambil lokasi dan isi dropdown
+async function fetchLocations() {
+    try {
+        const response = await fetch('/api/locations'); // Panggil endpoint lokasi
+        if (!response.ok) {
+            throw new Error('Gagal mengambil data lokasi');
+        }
+
+        // Parse data lokasi
+        const locations = await response.json(); 
+        const locationSelect = document.getElementById('subject'); // Dropdown lokasi
+
+        // Kosongkan dropdown sebelum mengisi ulang
+        locationSelect.innerHTML = '<option value="">Pilih Lokasi</option>';
+
+        // Tambahkan setiap lokasi ke dropdown
+        locations.forEach(location => {
+            const option = document.createElement('option');
+            option.value = location._id; // Gunakan ID lokasi sebagai value
+            option.textContent = location.lokasi; // Tampilkan nama lokasi
+            locationSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Gagal memuat data lokasi. Silakan coba lagi.');
+    }
+}
+
+// Panggil fungsi fetchLocations saat halaman dimuat
+fetchLocations();
 
 // Fungsi untuk mencari buku
 searchInput.addEventListener('input', () => {

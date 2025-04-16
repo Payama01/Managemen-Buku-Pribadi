@@ -9,7 +9,7 @@ router.get('/', async (req,res) => {
   try{
     const locations = await Location.find();
     console.log("Data buku yang dikirim:",locations);
-    res.send(locations);
+    res.json(locations);
   } catch(error) {
     res.status(404).send('Lokasi tidak ada!');
   }
@@ -86,3 +86,5 @@ router.delete('/:id', async (req, res) => {
     res.status(500).send('Terjadi kesalahan server.');
   }
 });
+
+module.exports = router;

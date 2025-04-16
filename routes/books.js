@@ -78,6 +78,10 @@ router.post('/', upload.single('ebook'), async (req, res) => {
     }
 
     // Cek Apakah lokasi
+    const location = await Location.findById(req.body.lokasi);
+    if(!location) {
+      return res.status(400).send('Lokasi tidak valid');
+    }
 
     // Buat buku baru
     const book = new Book({ 

@@ -23,9 +23,11 @@ app.use(session({
 
 const authRoutes = require('./routes/auth');
 const indexRoutes = require('./routes/index');
+const locationRoutes = require('./routes/locations');
 
 app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
+app.use('/api/locations', locationRoutes);
 
 //
 app.set('view engine', 'ejs');
