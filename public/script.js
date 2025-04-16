@@ -1,7 +1,9 @@
 const bookForm = document.getElementById('bookForm');
 const booksTable = document.getElementById('booksTable').getElementsByTagName('tbody')[0];
 const submitButton = document.getElementById('submitButton');
-const searchInput = document.getElementById('searchInput');
+const searchLocation = document.getElementById('searchLocation');
+const searchName = document.getElementById('searchName');
+const searchCreator = document.getElementById('searchCreator');
 
 let editingBookNo = null;
 
@@ -183,19 +185,51 @@ async function deleteBook(id) {
 }
 
 // Fungsi untuk mencari buku
-searchInput.addEventListener('input', () => {
-    const searchTerm = searchInput.value.toLowerCase();
+searchLocation.addEventListener('input', () => {
+    const searchTerm = searchLocation.value.toLowerCase();
     const rows = booksTable.getElementsByTagName('tr');
     
     for (let row of rows) {
         const cells = row.getElementsByTagName('td');
-        const nomorbuku = cells[0].innerText.toLowerCase();
+        const lokasi = cells[4].innerText.toLowerCase();
+        
+        if (
+            lokasi.includes(searchTerm)
+        ) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    }
+});
+
+searchName.addEventListener('input', () => {
+    const searchTerm = searchName.value.toLowerCase();
+    const rows = booksTable.getElementsByTagName('tr');
+    
+    for (let row of rows) {
+        const cells = row.getElementsByTagName('td');
         const name = cells[1].innerText.toLowerCase();
+        
+        if (
+            name.includes(searchTerm)
+        ) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    }
+});
+
+searchCreator.addEventListener('input', () => {
+    const searchTerm = searchCreator.value.toLowerCase();
+    const rows = booksTable.getElementsByTagName('tr');
+    
+    for (let row of rows) {
+        const cells = row.getElementsByTagName('td');
         const penulis = cells[3].innerText.toLowerCase();
         
         if (
-            nomorbuku.includes(searchTerm) || 
-            name.includes(searchTerm) || 
             penulis.includes(searchTerm)
         ) {
             row.style.display = '';

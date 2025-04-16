@@ -5,6 +5,34 @@
     font-size: large;
 }
 
+#input-container{
+    display: none;
+    padding: 15px;
+}
+
+#toggle-button{
+    width: 110px;
+    height: 50px;
+}
+
+.tombol{
+    color: #20c997;
+    border: #20c997 1.5px solid;
+    border-radius: 10px;  
+}
+
+.tombol:hover{
+    background-color: #20c997;
+    color: white;
+    border: #20c997 1.5px solid;
+    border-radius: 10px;  
+}
+
+.field-search{
+    border-radius: 5px;
+    border-style: none;
+}
+
 body{
     background-image: url("/image/Bg_book.jpg");
     background-image: url("../image/Bg_book.jpg");
@@ -43,11 +71,6 @@ body{
     border: 2px gray solid;
 
     color: aqua;
-}
-
-.field-search{
-    border-radius: 5px;
-    border-style: none;
 }
 
 .change{
