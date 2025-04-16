@@ -87,6 +87,12 @@
                     <input type="number" id="halaman" placeholder="Jumlah Halaman" required>
                     <input type="text" id="penulis" placeholder="Nama Penulis" required>
                     <input type="text" id="lokasi" placeholder="Lokasi Buku" required>
+                    <select name="subject" id="subject">
+                        <option value=""></option>
+                        <% books.forEach(book => { %>
+                            <option value="<%= book.lokasi %>"><%= book.lokasi %></option>
+                        <% }) %>
+                    </select>
                     <input type="file" id="ebook" name="ebook" placeholder="EBook (jika ada)" accept=".pdf, .epub, .mobi">
                     <button type="submit" class="btn btn-primary" id="submitButton" data-bs-dismiss="modal">Tambah Buku</button>
                 </form>
