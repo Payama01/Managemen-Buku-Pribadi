@@ -27,7 +27,7 @@ const upload = multer({storage: fileStorageEngine});
 // Buat ambil semua buku tapi async
 router.get('/', async (req,res) => {
   try{
-    const books = await Book.find().populate('lokasi').sort('name');
+    const books = await Book.find().sort('name');
     console.log("Data buku yang dikirim:", books);
     res.json(books);
   } catch(error){
@@ -38,7 +38,7 @@ router.get('/', async (req,res) => {
 // Buat ambil 1 spesific buku dengan mencari nomor buku
 router.get('/search/:id', async (req, res) => {
   try {
-    const book = await Book.findById(req.params.id).populate('lokasi');
+    const book = await Book.findById(req.params.id);
     console.log("ID yang diterima:", req.params.id);
     if (!book) {
       return res.status(404).send('Buku dengan nomor tersebut tidak ditemukan!');
@@ -77,7 +77,6 @@ router.post('/', upload.single('ebook'), async (req, res) => {
       return res.status(400).send('Nomor buku sudah digunakan');
     }
 
-    // Cek Apakah lokasi
 
     // Buat buku baru
     const book = new Book({ 
