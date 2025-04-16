@@ -77,7 +77,6 @@ router.post('/', upload.single('ebook'), async (req, res) => {
       return res.status(400).send('Nomor buku sudah digunakan');
     }
 
-    // Cek Apakah lokasi
 
     // Buat buku baru
     const book = new Book({ 

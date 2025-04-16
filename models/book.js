@@ -1,7 +1,5 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
-// const Location = require('../models/location');
-
 const Book = mongoose.model('Book', new mongoose.Schema({
     nomorbuku: {
         type: Number,
