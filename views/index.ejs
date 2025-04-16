@@ -21,8 +21,14 @@
             </div>
         </div>
 
-        <div class="search">
-            <input class="field-search" type="text" id="searchInput" placeholder="Cari buku atau penulis...">
+        <div id="field-search-area">
+            <button class="tombol" id="toggle-button" onclick="toggleForm()">Search</button>
+
+            <div id="input-container">
+                <input class="field-search" type="text" id="searchLocation" placeholder="Masukkan Lokasi Buku">
+                <input class="field-search" type="text" id="searchName" placeholder="Masukkan Nama Buku">
+                <input class="field-search" type="text" id="searchCreator" placeholder="Masukkan Nama Penulis">
+            </div>
         </div>
 
         <div class="main">
@@ -106,5 +112,25 @@
 
     <script src="/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script>
+        function toggleForm() {
+            const container = document.getElementById("input-container");
+            const button = document.getElementById("toggle-button");
+            const field = document.getElementById("field-search-area");
+
+            const isHidden = window.getComputedStyle(container).display === "none";
+
+            if (isHidden) {
+                container.style.display = "flex";
+                container.style.gap = "18px"
+                button.textContent = "Tutup";
+                field.style.display = "flex"
+            } else {
+                container.style.display = "none";
+                button.textContent = "Search";
+            }
+        }
+    </script>
 </body>
 </html>
