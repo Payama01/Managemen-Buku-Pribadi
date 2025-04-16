@@ -94,7 +94,7 @@
                     <input type="text" id="penulis" placeholder="Nama Penulis" required>
                     <input type="text" id="lokasi" placeholder="Lokasi Buku" required>
                     <select name="subject" id="subject">
-                        <option value=""></option>
+                        <option value="">Pilih Lokasi</option>
                         <% books.forEach(book => { %>
                             <option value="<%= book.lokasi %>"><%= book.lokasi %></option>
                         <% }) %>
