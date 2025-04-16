@@ -1,5 +1,6 @@
 const Book = require('../models/book');
 const {validate} = require('../models/book');
+const Location = require('../models/location');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const ejs = require('ejs');
@@ -77,10 +78,13 @@ router.post('/', upload.single('ebook'), async (req, res) => {
       return res.status(400).send('Nomor buku sudah digunakan');
     }
 
-    // Cek Apakah lokasi
-    const location = await Location.findById(req.body.lokasi);
-    if(!location) {
-      return res.status(400).send('Lokasi tidak valid');
+    // Tangani lokasi
+    let lokasiId = req.body.lokasi;
+    if (lokasiId === 'new') {
+        // Buat lokasi baru
+        const newLocation = new Location({ lokasi: req.body.lokasiInput });
+        await newLocation.save();
+        lokasiId = newLocation._id; // Gunakan _id lokasi baru
     }
 
     // Buat buku baru
@@ -185,7 +189,6 @@ router.put('/:id', upload.single('ebook'), async (req, res) => {
     res.status(500).send('Terjadi kesalahan server saat mengupdate buku');
   }
 });
-
 
 //Buat Hapus buku
 router.delete('/:id', async (req,res) => {

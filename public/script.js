@@ -42,7 +42,7 @@ function displayBooks(books) {
 // Fungsi untuk menambah buku
 bookForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-
+    console.log('Fungsi menambah buku s.js berjalan');
     const ebookInput = document.getElementById('ebook');
     const nomorbukuInput = document.getElementById('nomorbuku').value;
     const formData = new FormData();
@@ -59,7 +59,11 @@ bookForm.addEventListener('submit', async (e) => {
     formData.append('halaman', document.getElementById('halaman').value);
     formData.append('penulis', document.getElementById('penulis').value);
     formData.append('lokasi', document.getElementById('subject').value);
-    formData.append('lokasi', document.getElementById('lokasi').value);
+    //formData.append('lokasi', document.getElementById('lokasi').value);
+
+    if (document.getElementById('subject').value === 'new') {
+        formData.append('lokasiInput', document.getElementById('lokasiInput').value);
+    }
 
     if (ebookInput.files.length > 0) {
         formData.append('ebook', ebookInput.files[0]);
@@ -186,28 +190,41 @@ async function deleteBook(id) {
     fetchBooks(); // Ambil data buku terbaru
 }
 
+async function deleteEbook(id) {
+    const response = await fetch(`/api/eBooks/${id}`, {
+        method: 'DELETE',
+    });
+
+    if (!response.ok) {
+        console.error("Gagal menghapus eBook");
+        return;
+    }
+}
+
 // Fungsi untuk mengambil lokasi dan isi dropdown
 async function fetchLocations() {
     try {
-        const response = await fetch('/api/locations'); // Panggil endpoint lokasi
-        if (!response.ok) {
-            throw new Error('Gagal mengambil data lokasi');
-        }
-
-        // Parse data lokasi
-        const locations = await response.json(); 
-        const locationSelect = document.getElementById('subject'); // Dropdown lokasi
+        const response = await fetch('/api/locations'); // Pastikan endpoint ini benar
+        const locations = await response.json();
+        const locationSelect = document.getElementById('subject');
 
         // Kosongkan dropdown sebelum mengisi ulang
         locationSelect.innerHTML = '<option value="">Pilih Lokasi</option>';
 
-        // Tambahkan setiap lokasi ke dropdown
+        // Tambahkan lokasi dari backend
         locations.forEach(location => {
             const option = document.createElement('option');
             option.value = location._id; // Gunakan ID lokasi sebagai value
             option.textContent = location.lokasi; // Tampilkan nama lokasi
             locationSelect.appendChild(option);
         });
+
+        // Tambahkan opsi "Tambah Lokasi Baru"
+        const newOption = document.createElement('option');
+        newOption.value = 'new';
+        newOption.textContent = 'Tambah Lokasi Baru';
+        locationSelect.appendChild(newOption);
+
     } catch (error) {
         console.error('Error:', error);
         alert('Gagal memuat data lokasi. Silakan coba lagi.');
@@ -216,6 +233,17 @@ async function fetchLocations() {
 
 // Panggil fungsi fetchLocations saat halaman dimuat
 fetchLocations();
+
+document.getElementById('subject').addEventListener('change', function () {
+    const lokasiInput = document.getElementById('lokasiInput');
+    if (this.value === 'new') {
+        lokasiInput.style.display = 'block';
+        lokasiInput.required = true;
+    } else {
+        lokasiInput.style.display = 'none';
+        lokasiInput.required = false;
+    }
+});
 
 // Fungsi untuk mencari buku
 searchInput.addEventListener('input', () => {

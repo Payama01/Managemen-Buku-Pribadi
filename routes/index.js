@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
     }
 
     try {
-        const books = await Book.find().sort('name');
+        const books = await Book.find().populate('lokasi').sort('name');
         res.render('index', { books }); //  render views/index.ejs
     } catch (error) {
         console.error("Error mengambil buku:", error);

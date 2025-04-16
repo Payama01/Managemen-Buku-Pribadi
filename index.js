@@ -46,7 +46,7 @@ app.use('/eBook', express.static(path.join(__dirname, 'eBook')));
 app.get('/', async (req,res) => {
   try{
     console.log("Book model:", Book);
-    const books = await Book.find().sort('name');
+    const books = await Book.find().populate('lokasi').sort('name');
     res.render('index', { books});
   } catch(error){
     console.error("Error mengambil buku:", error);

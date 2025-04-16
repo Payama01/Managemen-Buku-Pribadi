@@ -86,11 +86,13 @@
                     <input type="text" id="name" placeholder="Nama Buku" required>
                     <input type="number" id="halaman" placeholder="Jumlah Halaman" required>
                     <input type="text" id="penulis" placeholder="Nama Penulis" required>
-                    <input type="text" id="lokasi" placeholder="Lokasi Buku" required>
-                    <select name="lokasi" id="subject" onchange="toggleLokasiInput(this)">
+                    
+                    <select name="lokasi" id="subject">
                         <option value="">Pilih Lokasi</option>
                         <% books.forEach(book => { %>
-                            <option value="<%= book.lokasi %>"><%= book.lokasi %></option>
+                            <% if (book.lokasi && book.lokasi._id && book.lokasi.lokasi) { %>
+                                <option value="<%= book.lokasi._id %>"><%= book.lokasi.lokasi %></option>
+                            <% } %>
                         <% }) %>
                         <option value="new">Tambah Lokasi Baru</option>
                     </select>
