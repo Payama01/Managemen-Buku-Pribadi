@@ -239,28 +239,6 @@ searchCreator.addEventListener('input', () => {
     }
 });
 
-searchInput.addEventListener('input', () => {
-    const searchTerm = searchInput.value.toLowerCase();
-    const rows = booksTable.getElementsByTagName('tr');
-    
-    for (let row of rows) {
-        const cells = row.getElementsByTagName('td');
-        const nomorbuku = cells[0].innerText.toLowerCase();
-        const name = cells[1].innerText.toLowerCase();
-        const penulis = cells[3].innerText.toLowerCase();
-        
-        if (
-            nomorbuku.includes(searchTerm) || 
-            name.includes(searchTerm) || 
-            penulis.includes(searchTerm)
-        ) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    }
-});
-
 // Ambil buku saat halaman dimuat
 fetchBooks();
 
