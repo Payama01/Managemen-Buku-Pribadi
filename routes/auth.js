@@ -16,9 +16,10 @@ router.get('/sign', (req, res) => {
 });
 
 // GET User page
-router.get('/user', (req, res) => {
+router.get('/user', async (req, res) => {
   if (req.session.user) {
-    res.render('user/page'); //user.page
+    const user = await User.findById(req.session.user._id);
+    res.render('user/page',{ user }); //user.page
   } else {
     res.redirect('/auth/login');
   }
@@ -94,24 +95,41 @@ router.post('/signup', async (req, res) => {
 
 // PUT USER
 router.put('/user/:id', async (req, res) => {
-  const { email, username, password } = req.body;
-  const userId = req.session.user.id; // Ambil ID user dari session
+  console.log('Route PUT /auth/user/:id dipanggil dengan ID:', req.params.id);
+  try {
+    const { email, username, password } = req.body;
+    const userId = req.params.id; // Ambil ID user dari session
 
-  // VALIDASI
-  const { error } = validate({ email, username, password });
-  if (error) return res.render('user/page', { error: error.details[0].message });
+    // VALIDASI
+    const { error } = validate({ email, username, password });
+    if (error) return res.render('user/page', { error: error.details[0].message });
 
-  // HASH PASSWORD
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+    // HASH PASSWORD
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-  // UPDATE USER
-  await User.findByIdAndUpdate(userId, { email, username, password: hashedPassword });
+    // CEK APAKAH EMAIL UNIQUE
+    const existingEmail = await User.findOne({ email, _id: { $ne: userId } });
+    if (existingEmail) {
+      return res.status(400).send('Email sudah digunakan oleh user lain');
+  }
 
-  console.log("User berhasil update:", username);
+    // UPDATE USER
+    const userUpdated = await User.findByIdAndUpdate(userId, { email, username, password: hashedPassword },
+      {new: true}); //memastikan data yang dikembalikan adalah data yang sudah diperbarui.
+    
+    if (!userUpdated) {
+      return res.status(404).send('User tidak ditemukan');
+    }
+    
+    console.log("User berhasil update:", userUpdated);
 
-  // REDIRECT KE USER PAGE
-  res.redirect('/auth/user');
+    // REDIRECT KE USER PAGE
+    res.redirect('/auth/user');
+  } catch (error) {
+    console.error("Error saat memperbarui user:", error);
+    res.status(500).send('Terjadi kesalahan saat memperbarui user');
+  }
 });
 
 //DELETE USER
