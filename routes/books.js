@@ -50,6 +50,18 @@ router.get('/search/:id', async (req, res) => {
   }
 });
 
+//route untuk EJS agar bisa menampilkan satu buku untuk di delete
+router.get('/books/:id', async (req, res) => {
+  try {
+      const book = await Book.findById(req.params.id);
+      if (!book) return res.status(404).send('Buku tidak ditemukan');
+      res.render('index', { books: [book] }); // Kirim hanya buku yang sesuai
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Terjadi kesalahan server');
+  }
+});
+
 // Endpoint khusus untuk mengunggah file
 router.post('/upload', upload.single('ebook'), (req, res) => {
   if (!req.file) {
@@ -181,6 +193,28 @@ router.put('/:id', upload.single('ebook'), async (req, res) => {
   }
 });
 
+router.delete('/upload/:id', async (req, res) => {
+  try {
+      const book = await Book.findById(req.params.id);
+      console.log(book);
+      if (!book) return res.status(404).send('Buku tidak ditemukan');
+      console.log(book.filepath);
+      if (book.filepath) {
+          const filePath = path.join(__dirname, '..', book.filepath);
+          fs.unlink(filePath, (err) => {
+              if (err) console.error('Gagal menghapus file:', err);
+          });
+
+          book.filepath = null;
+          book.save();
+      }
+
+      res.send({ message: 'PDF berhasil dihapus' });
+  } catch (error) {
+      console.error('Error saat menghapus PDF:', error);
+      res.status(500).send('Terjadi kesalahan server');
+  }
+});
 
 //Buat Hapus buku
 router.delete('/:id', async (req,res) => {
