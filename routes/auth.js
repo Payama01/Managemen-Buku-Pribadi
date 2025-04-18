@@ -17,7 +17,12 @@ router.get('/sign', (req, res) => {
 
 // GET User page
 router.get('/user', (req, res) => {
-  res.render('user/page'); // user/page.ejs
+  if (req.session.user) {
+    res.render('user/page'); //user.page
+  } else {
+    res.redirect('/auth/login');
+  }
+  // res.render('user/page'); 
 });
 
 // GET login page
@@ -45,7 +50,7 @@ router.post('/login', async (req, res) => {
       return res.render('login', { error: 'Password salah' });
     }
 
-    req.session.user = { id: user._id, username: user.username };
+    req.session.user = { _id: user._id, username: user.username };
     res.redirect('/');
   } catch (err) {
     console.error(err);
@@ -86,5 +91,54 @@ router.post('/signup', async (req, res) => {
   // REDIRECT KE LOGIN
   res.redirect('/auth/login?signupSuccess=true');
 });
+
+// PUT USER
+router.put('/user/:id', async (req, res) => {
+  const { email, username, password } = req.body;
+  const userId = req.session.user.id; // Ambil ID user dari session
+
+  // VALIDASI
+  const { error } = validate({ email, username, password });
+  if (error) return res.render('user/page', { error: error.details[0].message });
+
+  // HASH PASSWORD
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  // UPDATE USER
+  await User.findByIdAndUpdate(userId, { email, username, password: hashedPassword });
+
+  console.log("User berhasil update:", username);
+
+  // REDIRECT KE USER PAGE
+  res.redirect('/auth/user');
+});
+
+//DELETE USER
+router.delete('/user/delete',ensureAuthenticated, async (req, res) => {
+  try {
+    const userId = req.session.user._id; // Ambil ID user dari session
+    console.log("User mau dihapus:", userId);
+    // HAPUS USER
+    await User.findByIdAndDelete(userId);
+    console.log("User berhasil dihapus:", userId);
+    
+    // REDIRECT KE LOGIN
+    req.session.destroy(); // Hapus session user
+    // Kirim respons JSON ke frontend
+    res.status(200).json({ message: 'User berhasil dihapus' });
+  } catch (error) {
+    console.error("Gagal menghapus user:", error);
+    res.status(500).json({ error: 'Gagal menghapus user' });
+  }
+});
+
+function ensureAuthenticated(req, res, next) {
+  if (!req.session.user) {
+    return res.status(401).json({ message: 'User tidak terautentikasi' });
+  }
+  next();
+}
+
 
 module.exports = router;

@@ -4,6 +4,7 @@ const submitButton = document.getElementById('submitButton');
 const searchLocation = document.getElementById('searchLocation');
 const searchName = document.getElementById('searchName');
 const searchCreator = document.getElementById('searchCreator');
+const deletePdf = document.getElementById('deletePdf');
 
 let editingBookNo = null;
 
@@ -28,9 +29,11 @@ function displayBooks(books) {
             <td>
                 ${
                 book.filepath
-                    ? `<a href="${book.filepath.replace(/\\/g, '/')}" target="_blank" rel="noopener noreferrer">Baca PDF</a>`
+                    ? `<a href="${book.filepath.replace(/\\/g, '/')}" target="_blank" rel="noopener noreferrer">Baca PDF</a>
+                       <a type="button" onclick="deleteEpdf('${book._id}')" class="btn btn-primary">Hapus PDF</a>`
                     : 'Tidak ada'
                 }
+
             </td>
             <td>
                 <button class="change" data-bs-toggle="modal" data-bs-target="#formulir" onclick="editBook('${book._id}')">Edit</button>
@@ -167,6 +170,43 @@ async function editBook(id) {
     } catch (error) {
         console.error('Error:', error);
         alert('Gagal memuat data buku untuk diedit. Silakan coba lagi.');
+    }
+}
+
+async function deleteEpdf(id) {
+    console.log('deleteEpdf dipanggil dengan ID:', id);
+    try {
+        const response = await fetch(`/api/books/upload/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error('Gagal menghapus PDF');
+        }
+
+        alert('PDF berhasil dihapus');
+        await fetchBooks(); // Refresh halaman setelah penghapusan
+    } catch (error) {
+        console.error('Gagal menghapus PDF:', error);
+        alert('Gagal menghapus PDF');
+    }
+}
+
+async function deleteUser() {
+    try {
+        const response = await fetch(`/auth/user/delete`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error('Response gagal menghapus user');
+        }
+
+        alert('User berhasil dihapus');
+        window.location.href = '/auth/login'; // Redirect ke halaman login setelah penghapusan
+    } catch(error) {
+        console.error('Gagal menghapus user:', error);
+        alert('Gagal menghapus user');
     }
 }
 

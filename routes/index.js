@@ -15,5 +15,4 @@ router.get('/', async (req, res) => {
         res.status(500).send("Terjadi kesalahan.");
     }
 });
-console.log();
 module.exports = router;
