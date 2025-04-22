@@ -59,6 +59,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// SIGN UP USER BARU
 router.post('/signup', async (req, res) => {
   console.log("User mau daftar:");
   const { email, username, password } = req.body;

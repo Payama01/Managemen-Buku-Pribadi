@@ -1,5 +1,7 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
+
+// Schema MongoDB untuk Buku
 const Book = mongoose.model('Book', new mongoose.Schema({
     nomorbuku: {
         type: Number,
@@ -27,6 +29,7 @@ const Book = mongoose.model('Book', new mongoose.Schema({
     },
 }));
 
+// Validasi Input Buku
 function validateBook(book) {
     const schema = Joi.object({
       nomorbuku: Joi.number().required(),

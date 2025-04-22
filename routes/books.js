@@ -8,6 +8,7 @@ const fs = require('fs');
 const path = require('path');
 const router = express.Router();
 
+//Lokasi Penyimpanan PDF
 const fileStorageEngine = multer.diskStorage({
   destination: (req,file,cb) => {
     cb(null,'./eBook');
@@ -193,6 +194,7 @@ router.put('/:id', upload.single('ebook'), async (req, res) => {
   }
 });
 
+//Hapus PDF secara terpisah dari Buku
 router.delete('/upload/:id', async (req, res) => {
   try {
       const book = await Book.findById(req.params.id);

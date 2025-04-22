@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Book = require('../models/book');
 
+// Untuk mengirim buku ke ejs
 router.get('/', async (req, res) => {
+    // Cek User session
     if (!req.session.user) {
         return res.redirect('/auth/login');
     }

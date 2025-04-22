@@ -54,18 +54,6 @@ mongoose.connect('mongodb://localhost/ManagemenBuku')
   .then(() => console.log('Connected to MongoDB...'))
   .catch(err => console.error('Could not connect to MongoDB...'));
 
-
-app.get('/', async (req,res) => {
-  try{
-    console.log("Book model:", Book);
-    const books = await Book.find().sort('name');
-    res.render('index', { books});
-  } catch(error){
-    console.error("Error mengambil buku:", error);
-    res.status(500).send('Terjadi kesalahan dalam mengambil data buku.');
-  }
-});
-
 const port = process.env.PORT || 4000;
 app.listen(port,() => console.log(`Listening on port ${port}...`));
 
