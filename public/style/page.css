@@ -20,6 +20,29 @@ body{
     padding: 10px;
 }
 
+.judul{
+    margin-right: 100px;
+}
+
+.btn_hapus{
+    width: 150px;
+    height: 70px;
+    right: 40px;
+    font-size: larger;
+    margin-top: 10px;
+    cursor: pointer;
+
+    border-radius: 20px;
+
+    position:fixed;
+}
+.btn_hapus:hover{
+    background-color: rgb(224, 68, 68);
+    color: aliceblue;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
 h1{
     font-size: 90px;
     text-shadow: black 5px 5px 10px;
@@ -51,9 +74,6 @@ h1{
     height: 300px;
 }
 
-/* .middle{
-    padding-bottom: 10px;
-} */
 
 .field{
     width: 500px;
@@ -102,6 +122,7 @@ a{
 
 .btn_up:hover{
     background: linear-gradient(to right, #55EE40, #FFF757);
+    cursor: pointer;
 }
 
 fieldset{
@@ -111,7 +132,6 @@ fieldset{
 
     box-shadow: 2px 2px rgb(134, 130, 130);
 
-    height: 270px;
     width: 400px;
 
     padding: 20px;
@@ -119,7 +139,5 @@ fieldset{
 
 
 .cage{  
-    /* padding-left: 120px; */
-
     font-size: 50px;
 }
