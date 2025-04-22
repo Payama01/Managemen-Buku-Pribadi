@@ -17,9 +17,18 @@ async function fetchBooks() {
 
 // Fungsi untuk menampilkan buku di tabel
 function displayBooks(books) {
+    // Urutkan berdasarkan nomorbuku secara ascending
+    books.sort((a, b) => {
+        // Jika nomorbuku berupa angka
+        return a.nomorbuku - b.nomorbuku;
+
+        // Jika nomorbuku berupa string, misal 'BK001', 'BK002', gunakan ini:
+        // return a.nomorbuku.localeCompare(b.nomorbuku);
+    });
+    
     booksTable.innerHTML = ''; // Kosongkan tabel sebelum menampilkan data baru
     books.forEach(book => {
-        const row = booksTable.insertRow();
+        const row = booksTable.insertRow(); //ini tambah buku di index
         row.innerHTML = `
             <td>${book.nomorbuku}</td>
             <td>${book.name}</td>
