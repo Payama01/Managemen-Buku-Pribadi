@@ -38,9 +38,9 @@
 
                     <div class="btn_wrap">
                         <button class="btn_up russo-one-regular" type="submit" name="submit">Sign Up</button>
-                        <!-- <% if (locals.error) { %>
-                            <span class="text-danger pl-2"><%= error %></span>
-                        <% } %>  -->
+                        <% if (locals.error) { %>
+                            <script>alert("<%= error %>");</script>
+                        <% } %> 
                         <button class="btn_login russo-one-regular"><a href="/auth/login">Login</a></button>
                     </div>
                 </fieldset>
