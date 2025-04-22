@@ -62,7 +62,13 @@ router.post('/signup', async (req, res) => {
 
   // VALIDASI
   const { error } = validate({ email, username, password });
-  if (error) return console.log('validate gagal');//res.render('sign', { error: error.details[0].message });
+  if (error) {
+    return res.render('sign', {
+      error: error.details[0].message,
+      email,
+      username
+    });
+  }
   console.log("User validasi:");
 
   // CEK USER SUDAH ADA
