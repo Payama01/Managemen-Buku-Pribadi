@@ -173,6 +173,7 @@ async function editBook(id) {
     }
 }
 
+//Fungsi untuk menghapus Ebook/PDF
 async function deleteEpdf(id) {
     console.log('deleteEpdf dipanggil dengan ID:', id);
     try {
@@ -192,6 +193,7 @@ async function deleteEpdf(id) {
     }
 }
 
+//Fungsi untuk menghapus user
 async function deleteUser() {
     try {
         const response = await fetch(`/auth/user/delete`, {
@@ -224,7 +226,7 @@ async function deleteBook(id) {
     fetchBooks(); // Ambil data buku terbaru
 }
 
-// Fungsi untuk mencari buku
+// Fungsi untuk mencari buku berdasarkan lokasi
 searchLocation.addEventListener('input', () => {
     const searchTerm = searchLocation.value.toLowerCase();
     const rows = booksTable.getElementsByTagName('tr');
@@ -243,6 +245,7 @@ searchLocation.addEventListener('input', () => {
     }
 });
 
+// Fungsi untuk mencari buku berdasarkan Nama
 searchName.addEventListener('input', () => {
     const searchTerm = searchName.value.toLowerCase();
     const rows = booksTable.getElementsByTagName('tr');
@@ -261,6 +264,7 @@ searchName.addEventListener('input', () => {
     }
 });
 
+// Fungsi untuk mencari buku berdasarkan Penulis
 searchCreator.addEventListener('input', () => {
     const searchTerm = searchCreator.value.toLowerCase();
     const rows = booksTable.getElementsByTagName('tr');
