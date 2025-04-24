@@ -10,9 +10,9 @@ const authRoutes = require('./routes/auth');
 const indexRoutes = require('./routes/index');
 const app = express();
 
-const Joi = require('joi');
-const multer = require('multer');
-const ejs = require('ejs');
+// const Joi = require('joi');
+// const multer = require('multer');
+// const ejs = require('ejs');
 
 // Middleware untuk parsing body
 app.use(bodyParser.urlencoded({ extended:true }));
